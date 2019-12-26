@@ -1,0 +1,145 @@
+@charset "utf-8";
+
+@font-face { 
+    font-family: gameFont;
+
+    src: url("clacon.ttf");
+}
+
+body{background-color:black;font:26px gameFont;}
+
+div#main {
+	background-color:black;
+	width:100%;
+	margin:auto;
+}
+
+#left-menu, #right-menu, #user-message {
+	color:#ff860d;
+	list-style-type:none;
+}
+
+
+li.off{
+	display:none;
+}
+
+
+table#gameboard {
+	border:none;
+	border-spacing:0;
+	padding:0;
+	margin:auto;
+	font:26px gameFont;
+}
+table#gameboard tr{
+	border-spacing:0;
+	border:none;
+	padding:0;
+	line-height:16px;
+}
+table#gameboard tr td{
+	font-weight:normal;
+	white-space:pre;
+	border-spacing:0;
+	padding:0;
+	display:inline;
+}
+
+
+
+.player::after {color:#fff;content: "☺";}
+.player_shield::after {color:#fff;content: "☺";font-weight:600;}
+.player_dead::after {color:#f00;content: "☼";}
+
+.zoid::after {color:#a52188;content: "☻";}
+.zoidrone::after {color:#999;content: "☻";}
+.pzoidrone::after {color:#ff6d6d;content: "☻";}
+
+.pod::after {color:#ff860d;content: "o";}
+.clover::after {color:#62c21f;content: "♣";}
+.superpod::after {color:#42f596;content: "♥";}
+
+.trap::after {color:yellow;content: "♦";}
+.mine::after {color:#ff602a; animation: blinker .5s step-start infinite;content: "+";}
+.blackhole::after {color:#f00;content: "*";}
+
+.space::after {color:black;content: " ";}
+
+.udlr_weak::after {color:2f9aa4	;content: "╬";}
+.udl_weak::after {color:2f9aa4;content: "╣";}
+.udr_weak::after {color:2f9aa4;content: "╠";}
+.ulr_weak::after {color:2f9aa4;content: "╩";}
+.dlr_weak::after {color:2f9aa4;content: "╦";}
+.ud_weak::after, .u_weak::after, .d_weak::after {color:2f9aa4;content: "║";}
+.lr_weak::after, .l_weak::after, .r_weak::after {color:2f9aa4;content: "═";}
+.ur_weak::after {color:2f9aa4;content: "╚";}
+.dl_weak::after {color:2f9aa4;content: "╗";}
+.ul_weak::after {color:2f9aa4;content: "╝";}
+.dr_weak::after {color:2f9aa4;content: "╔";}
+
+.udlr::after {color:45d0dd;content: "╬";font-weight:400;}
+.udl::after {color:45d0dd;content: "╣";font-weight:400;}
+.udr::after {color:45d0dd;content: "╠";font-weight:400;}
+.ulr::after {color:45d0dd;content: "╩";font-weight:400;}
+.dlr::after {color:45d0dd;content: "╦";font-weight:400;}
+.ud::after, .u::after, .d::after {color:45d0dd;content: "║";font-weight:400;}
+.lr::after, .l::after, .r::after {color:45d0dd;content: "═";font-weight:400;}
+.ur::after {color:45d0dd;content: "╚";font-weight:400;}
+.dl::after {color:45d0dd;content: "╗";font-weight:400;}
+.ul::after {color:45d0dd;content: "╝";font-weight:400;}
+.dr::after {color:45d0dd;content: "╔";font-weight:400;}
+
+.ud_exit::after {color:yellow;content: "│";}
+.lr_exit::after {color:yellow;content: "─";}
+
+.explode1::after {color:#ff602a;content: "▓"; animation: explode1 .3s step-start infinite;}
+.explode2::after {color:#ff602a;content: "▓"; animation: explode2 .3s step-start infinite;}
+.explode3::after {color:#ff602a;content: "▓"; animation: explode3 .3s step-start infinite;}
+.explode4::after {color:#ff602a;content: "▒"; animation: explode1 .3s step-start infinite;}
+.explode5::after {color:#ff602a;content: "▒"; animation: explode2 .3s step-start infinite;}
+.explode6::after {color:#ff602a;content: "▒"; animation: explode3 .3s step-start infinite;}
+.explode7::after {color:#ff602a;content: "░"; animation: explode1 .3s step-start infinite;}
+.explode8::after {color:#ff602a;content: "░"; animation: explode2 .3s step-start infinite;}
+.explode9::after {color:#ff602a;content: "░"; animation: explode3 .3s step-start infinite;}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+
+@keyframes explode1 {
+  33% {
+    opacity: .7;
+  }
+  66% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .4;
+  }
+}
+@keyframes explode2 {
+  33% {
+    opacity: .4;
+  }
+  66% {
+    opacity: .7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes explode3 {
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: .4;
+  }
+  100% {
+    opacity: .7;
+  }
+}

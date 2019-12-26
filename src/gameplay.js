@@ -21,7 +21,7 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	let player = {
 		loc: randSpawnPoint(),
 		runMode: true,
-		clockSpeed: 3000,
+		clockSpeed: 20,
 		score: score,
 		shield: false,
 	}
@@ -44,7 +44,7 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	}
 	let clovers = createClovers(5)
 
-	console.log(getMapSimulation())
+	renderGameboard(getMapSimulation())
 
 	const actions = {
 		go_r: () => {return go(player, 'r')},
@@ -111,19 +111,17 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	function go(entity, dir) {
 		return new Promise(function(resolve, reject) {
 			if (entity.runMode) {
-				console.log('here')
 				if(lookNext(entity, dir) == 'space') {
 					entity.loc = locAt(entity.loc, dir)
 				}
-				console.log(getMapSimulation())
+				renderGameboard(getMapSimulation())
 				function run() {
-					console.log(lookNext(entity, dir),lookNext(entity, rotateRight(dir)),lookNext(entity, rotateLeft(dir)))
 					if(runthrough.includes(lookNext(entity, dir)) && !runthrough.includes(lookNext(entity, rotateRight(dir))) && !runthrough.includes(lookNext(entity, rotateLeft(dir)))) {
 						entity.loc = locAt(entity.loc, dir)
 						setTimeout(run, entity.clockSpeed)
 					}
 					else resolve()
-					console.log(getMapSimulation())
+					renderGameboard(getMapSimulation())
 				}
 				setTimeout(run, entity.clockSpeed)
 			}
@@ -131,7 +129,7 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 				if(lookNext(entity, dir) == 'space') {
 					entity.loc = locAt(entity.loc, dir)
 				}
-				console.log(getMapSimulation())
+				renderGameboard(getMapSimulation())
 				resolve()
 			}
 		})
@@ -186,10 +184,12 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 
 	async function playerLoop(game) {
 		await game()
-		console.log('looping')
 		setTimeout(playerLoop, player.clockSpeed, game);
 		
 	}
+	
+	launchGameboard(getMapSimulation()) //first time launching the game board and setting the table width and height
+	
 	playerLoop(async function() {
 		ua = nextUserAction
 		nextUserAction = () => {}
