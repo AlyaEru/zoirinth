@@ -45,26 +45,29 @@ table#gameboard tr td{
 	padding:0;
 	display:inline;
 }
+table#gameboard tr td::before {position:absolute;margin-left:.5em;display:none;}
+table#gameboard tr td:hover::before {color:#ff860d;background-color:#000;display:inline;}
 
 
+.player::after {color:#fff;content: "☺";} .player::before {content: "I am the player"}
 
-.player::after {color:#fff;content: "☺";}
-.player_shield::after {color:#fff;content: "☺";font-weight:600;}
+
+.player_shield::after {color:#fff;content: "☺";font-weight:600;} .player_shield::before {content: "I am the shielded player"}
 .player_dead::after {color:#f00;content: "☼";}
 
-.zoid::after {color:#a52188;content: "☻";}
-.zoidrone::after {color:#999;content: "☻";}
-.pzoidrone::after {color:#ff6d6d;content: "☻";}
+.zoid::after {color:#a52188;content: "☻";} .zoid::before {content: "I am an enemy zoid"}
+.zoidrone::after {color:#999;content: "☻";} .zoidrone::before {content: "I am a zoidrone"}
+.pzoidrone::after {color:#ff6d6d;content: "☻";} .pzoidrone::before {content: "I am a hatching zoidrone"}
 
 .pod::after {color:#ff860d;content: "o";}
-.clover::after {color:#62c21f;content: "♣";}
-.superpod::after {color:#42f596;content: "♥";}
+.clover::after {color:#62c21f;content: "♣";} .clover::before {content: "A clover"}
+.superpod::after {color:#42f596;content: "♥";} .superpod::before {content: "A superpod"}
 
-.trap::after {color:yellow;content: "♦";}
-.mine::after {color:#ff602a; animation: blinker .5s step-start infinite;content: "+";}
+.trap::after {color:yellow;content: "♦";} .trap::before {content: "I am a trap"}
+.mine::after {color:#ff602a; animation: blinker .5s step-start infinite;content: "+";} .mine::before {content: "A mine"}
 .blackhole::after {color:#f00;content: "*";}
 
-.space::after {color:black;content: " ";}
+.space::after {color:black;content: " ";} /*.space::before {content: "Nothing"}*/
 
 .udlr_weak::after {color:2f9aa4	;content: "╬";}
 .udl_weak::after {color:2f9aa4;content: "╣";}
@@ -77,6 +80,7 @@ table#gameboard tr td{
 .dl_weak::after {color:2f9aa4;content: "╗";}
 .ul_weak::after {color:2f9aa4;content: "╝";}
 .dr_weak::after {color:2f9aa4;content: "╔";}
+/*.udlr_weak::before, .udl_weak::before, .udr_weak::before, .ulr_weak::before, .dlr_weak::before, .ud_weak::before, .u_weak::before, .d_weak::before, .lr_weak::before, .l_weak::before, .r_weak::before, .ur_weak::before, .dl_weak::before, .ul_weak::before, .dr_weak::before {content: "A resiliant wall"}*/
 
 .udlr::after {color:45d0dd;content: "╬";font-weight:400;}
 .udl::after {color:45d0dd;content: "╣";font-weight:400;}
@@ -89,9 +93,10 @@ table#gameboard tr td{
 .dl::after {color:45d0dd;content: "╗";font-weight:400;}
 .ul::after {color:45d0dd;content: "╝";font-weight:400;}
 .dr::after {color:45d0dd;content: "╔";font-weight:400;}
+/*.udlr::before, .udl::before, .udr::before, .ulr::before, .dlr::before, .ud::before, .u::before, .d::before, .lr::before, .l::before, .r::before, .ur::before, .dl::before, .ul::before, .dr::before {content: "An impervious wall"}*/
 
-.ud_exit::after {color:yellow;content: "│";}
-.lr_exit::after {color:yellow;content: "─";}
+.ud_portal::after {color:yellow;content: "│";} .ud_portal::before {content: "The portal"}
+.lr_portal::after {color:yellow;content: "─";} .lr_portal::before {content: "The portal"}
 
 .explode1::after {color:#ff602a;content: "▓"; animation: explode1 .3s step-start infinite;}
 .explode2::after {color:#ff602a;content: "▓"; animation: explode2 .3s step-start infinite;}
