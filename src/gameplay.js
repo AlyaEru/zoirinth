@@ -24,12 +24,14 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		clockSpeed: 20,
 		score: score,
 		shield: false,
+		type: 'player',
+		dead: false,
 	}
 	function createZoids(numZoids) {
 		let zoids = []
 
 		for (let i = 0; i < numZoids; i++) {
-			zoids.push({loc: randSpawnPoint()})
+			zoids.push({loc: randSpawnPoint(), type: 'zoid'})
 		}
 		return zoids
 	}
@@ -38,7 +40,7 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	function createClovers(numClovers) {
 		let clovers = []
 		for (let i = 0; i < numClovers; i++) {
-			clovers.push({loc: randSpawnPoint()})
+			clovers.push({loc: randSpawnPoint(), type: 'clover'})
 		}
 		return clovers
 	}
@@ -84,7 +86,7 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		for (let i = 0; i < clovers.length; i++) {
 			mapCopy[clovers[i].loc.y][clovers[i].loc.x] = 'clover'
 		}
-		mapCopy[player.loc.y][player.loc.x] = player.shield ? 'player_shield' : 'player'
+		mapCopy[player.loc.y][player.loc.x] = player.dead ? 'player_dead' : (player.shield ? 'player_shield' : 'player')
 		return mapCopy
 	}
 	let runthrough = [
@@ -100,35 +102,43 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 			}
 		}
 	}
-	function handlePlayerOn(loc) {
-		switch (getMapSimulation()[loc.y][loc.x]) {
-		case 'clover': 
-			removeItem(clovers, loc)
-			player.score += 100
-			break
+	function handleEntityMoveto(entity, loc) {
+		if (entity.type == 'player') {
+			switch (itemAt(loc)) {
+			case 'space':
+				player.loc = loc
+				renderGameboard(getMapSimulation())
+				return true
+			case 'clover': 
+				removeItem(clovers, loc)
+				player.score += 100
+				player.loc = loc
+				renderGameboard(getMapSimulation())
+				return true
+			case 'zoid': 
+				player.dead = true
+				renderGameboard(getMapSimulation())
+				return false
+			}
 		}
 	}
 	function go(entity, dir) {
 		return new Promise(function(resolve, reject) {
 			if (entity.runMode) {
-				if(lookNext(entity, dir) == 'space') {
-					entity.loc = locAt(entity.loc, dir)
-				}
+				handleEntityMoveto(entity, locAt(entity.loc, dir))
 				renderGameboard(getMapSimulation())
 				function run() {
 					if(runthrough.includes(lookNext(entity, dir)) && !runthrough.includes(lookNext(entity, rotateRight(dir))) && !runthrough.includes(lookNext(entity, rotateLeft(dir)))) {
-						entity.loc = locAt(entity.loc, dir)
-						setTimeout(run, entity.clockSpeed)
+						if (handleEntityMoveto(entity, locAt(entity.loc, dir))) {
+							setTimeout(run, entity.clockSpeed)
+						}
 					}
 					else resolve()
-					renderGameboard(getMapSimulation())
 				}
 				setTimeout(run, entity.clockSpeed)
 			}
 			else {
-				if(lookNext(entity, dir) == 'space') {
-					entity.loc = locAt(entity.loc, dir)
-				}
+				handleEntityMoveto(entity, locAt(entity.loc, dir))
 				renderGameboard(getMapSimulation())
 				resolve()
 			}
@@ -162,23 +172,28 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	let nextUserAction = () => {} //could make queue to queue actions
 	document.onkeydown = function (e) {
 		e = e || window.event;
-		switch (e.code) {
-		case 'ArrowDown':
-		case 'KeyW':
-			nextUserAction = actions.go_d
-			break
-		case 'ArrowUp':
-		case 'KeyS':
-			nextUserAction = actions.go_u
-			break
-		case 'ArrowLeft':
-		case 'KeyA':
-			nextUserAction = actions.go_l
-			break
-		case 'ArrowRight':
-		case 'KeyD':
-			nextUserAction = actions.go_r
-			break
+		if (!player.dead) {
+			switch (e.code) {
+			case 'ArrowDown':
+			case 'KeyS':
+				nextUserAction = actions.go_d
+				break
+			case 'ArrowUp':
+			case 'KeyW':
+				nextUserAction = actions.go_u
+				break
+			case 'ArrowLeft':
+			case 'KeyA':
+				nextUserAction = actions.go_l
+				break
+			case 'ArrowRight':
+			case 'KeyD':
+				nextUserAction = actions.go_r
+				break
+			case 'KeyR':
+				player.runMode = !player.runMode
+				break
+			}
 		}
 	};
 
