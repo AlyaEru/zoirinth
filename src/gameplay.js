@@ -1,4 +1,5 @@
 function playLevel(level, score, mazeWidth, mazeHeight) {
+	let cloversCollected = 0
 	function rand(max) {
 		return Math.floor(Math.random() * Math.floor(max));
 	}
@@ -24,6 +25,8 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	}
 	const mapHeight = mazeHeight * 2 + 1
 	const mapWidth = mazeWidth * 2 + 1
+	const numClovers = 1//level + 5
+	const numZoids = level + 2
 
 	let map = buildMaze(mazeWidth,mazeHeight,.5, 1 - ((level - 1) % 5)/4)
 	function createZoids(numZoids) {
@@ -50,9 +53,10 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		shield: false,
 		type: 'player',
 		dead: false,
+		won: false,
 	}
-	let zoids = createZoids(3)
-	let clovers = createClovers(5)
+	let zoids = createZoids(numZoids)
+	let clovers = createClovers(numClovers)
 
 	const actions = {
 		go_r: () => {return go(player, 'r')},
@@ -90,11 +94,17 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 				removeItem(clovers, loc)
 				player.score += 100
 				player.loc = loc
+				cloversCollected++
 				moved = true
 				break
 			case 'zoid': 
 				player.dead = true
 				break
+			case 'lr_portal':
+			case 'ud_portal':
+				player.won = true
+				break
+				//handle winning here?
 			}
 		}
 		renderGameboard(getMapSimulation())
@@ -210,11 +220,30 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	async function playerLoop(game) {
 		await game()
 		setTimeout(playerLoop, player.clockSpeed, game);
-		
 	}
 	playerLoop(async function() {
 		ua = nextUserAction
 		nextUserAction = () => {}
 		await ua()
+		if (cloversCollected == numClovers) {
+			generateExit()
+			cloversCollected++
+		}
 	})
+	
+	function generateExit() {
+		let num = rand(mazeWidth * 2 + mazeHeight * 2)
+		if (num < mazeWidth) {
+			map[0][num * 2 + 1] = 'lr_portal'
+		}
+		else if (num < mazeWidth * 2) {
+			map[mapHeight - 1][(num - mazeWidth) * 2 + 1] = 'lr_portal'
+		}
+		else if (num < mazeWidth * 2 + mazeHeight) {
+			map[(num - 2 * mazeWidth) * 2 + 1][0] = 'ud_portal'
+		}
+		else {
+			map[(num - 2 * mazeWidth - mazeHeight) * 2 + 1][mapWidth - 1] = 'ud_portal'
+		}
+	}
 }
