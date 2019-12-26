@@ -1,4 +1,4 @@
-function buildMaze(height, width, straightness, ratioWeak) {
+function buildMaze(width, height, straightness, ratioWeak) {
 	directions = ['l','r','u','d']
 	function rand(max) {
 		return Math.floor(Math.random() * Math.floor(max));
@@ -34,13 +34,9 @@ function buildMaze(height, width, straightness, ratioWeak) {
 	function untouched(mazePoint) {
 		return mazePoint.l && mazePoint.r && mazePoint.u && mazePoint.d
 	}
-	
 	function canGo(maze, point) {
 		return point.x >= 0 && point.y >= 0 && point.x < width && point.y < height && untouched(maze[point.y][point.x])
 	}
-
-	
-	
 	function createMaze() {
 		let maze = []
 		for (i = 0; i < height; i++) {
@@ -104,9 +100,9 @@ function buildMaze(height, width, straightness, ratioWeak) {
 		let map = []
 		let mapWidth = width * 2 + 1
 		let mapHeight = height * 2 + 1
-		for (i = 0; i < mapWidth; i++) {
+		for (i = 0; i < mapHeight; i++) {
 			let mapRow = []
-			for (j = 0; j < mapHeight ; j++) {
+			for (j = 0; j < mapWidth ; j++) {
 				if (i % 2 == 0 || j % 2 == 0) {
 					mapRow.push('w')
 				}
