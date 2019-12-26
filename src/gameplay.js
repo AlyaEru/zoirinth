@@ -2,6 +2,7 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	function rand(max) {
 		return Math.floor(Math.random() * Math.floor(max));
 	}
+	
 	let takenPoints = []
 	function randSpawnPoint() {
 		while (true) {
@@ -9,7 +10,14 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 				x: rand(mazeWidth) * 2 + 1,
 				y: rand(mazeHeight) * 2 + 1,
 			}
-			if (!takenPoints.includes(point)) {
+			let match = false
+			for(takenPoint of takenPoints) {
+				if (takenPoint.x == point.x && takenPoint.y == point.y) {
+					match = true
+				}
+			}
+			if (match == false) {
+				takenPoints.push(point)
 				return point
 			}
 		}
@@ -18,6 +26,22 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	const mapWidth = mazeWidth * 2 + 1
 
 	let map = buildMaze(mazeWidth,mazeHeight,.5, 1 - ((level - 1) % 5)/4)
+	function createZoids(numZoids) {
+		let zoids = []
+
+		for (let i = 0; i < numZoids; i++) {
+			zoids.push({loc: randSpawnPoint(), type: 'zoid'})
+		}
+		return zoids
+	}
+	function createClovers(numClovers) {
+		let clovers = []
+		for (let i = 0; i < numClovers; i++) {
+			clovers.push({loc: randSpawnPoint(), type: 'clover'})
+		}
+		return clovers
+	}
+	
 	let player = {
 		loc: randSpawnPoint(),
 		runMode: true,
@@ -27,56 +51,14 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		type: 'player',
 		dead: false,
 	}
-	function createZoids(numZoids) {
-		let zoids = []
-
-		for (let i = 0; i < numZoids; i++) {
-			zoids.push({loc: randSpawnPoint(), type: 'zoid'})
-		}
-		return zoids
-	}
 	let zoids = createZoids(3)
-
-	function createClovers(numClovers) {
-		let clovers = []
-		for (let i = 0; i < numClovers; i++) {
-			clovers.push({loc: randSpawnPoint(), type: 'clover'})
-		}
-		return clovers
-	}
 	let clovers = createClovers(5)
-
-	renderGameboard(getMapSimulation())
 
 	const actions = {
 		go_r: () => {return go(player, 'r')},
 		go_l: () => {return go(player, 'l')},
 		go_u: () => {return go(player, 'u')},
 		go_d: () => {return go(player, 'd')},
-	}
-	function rotateLeft(dir) {
-		switch (dir) {
-		case 'l':
-			return 'd'
-		case 'r':
-			return 'u'
-		case 'u':
-			return 'l'
-		case 'd':
-			return 'r'
-		}
-	}
-	function rotateRight(dir) {
-		switch (dir) {
-		case 'l':
-			return 'u'
-		case 'r':
-			return 'd'
-		case 'u':
-			return 'r'
-		case 'd':
-			return 'l'
-		}
 	}
 	function getMapSimulation() {
 		mapCopy = JSON.parse(JSON.stringify(map)) //deep clone map
@@ -89,12 +71,6 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		mapCopy[player.loc.y][player.loc.x] = player.dead ? 'player_dead' : (player.shield ? 'player_shield' : 'player')
 		return mapCopy
 	}
-	let runthrough = [
-		'clover',
-		'space',
-		'pod',
-		'superpod',
-	]
 	function removeItem(items, loc) {
 		for (let i = 0; i < items.length; i++) {
 			if (items[i].loc.x == loc.x && items[i].loc.y == loc.y ) {
@@ -103,26 +79,58 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		}
 	}
 	function handleEntityMoveto(entity, loc) {
+		let moved = false
 		if (entity.type == 'player') {
 			switch (itemAt(loc)) {
 			case 'space':
 				player.loc = loc
-				renderGameboard(getMapSimulation())
-				return true
+				moved = true
+				break
 			case 'clover': 
 				removeItem(clovers, loc)
 				player.score += 100
 				player.loc = loc
-				renderGameboard(getMapSimulation())
-				return true
+				moved = true
+				break
 			case 'zoid': 
 				player.dead = true
-				renderGameboard(getMapSimulation())
-				return false
+				break
 			}
 		}
+		renderGameboard(getMapSimulation())
+		return moved
 	}
 	function go(entity, dir) {
+		let runthrough = [
+			'clover',
+			'space',
+			'pod',
+			'superpod',
+		]
+		function rotateLeft(dir) {
+			switch (dir) {
+			case 'l':
+				return 'd'
+			case 'r':
+				return 'u'
+			case 'u':
+				return 'l'
+			case 'd':
+				return 'r'
+			}
+		}
+		function rotateRight(dir) {
+			switch (dir) {
+			case 'l':
+				return 'u'
+			case 'r':
+				return 'd'
+			case 'u':
+				return 'r'
+			case 'd':
+				return 'l'
+			}
+		}
 		return new Promise(function(resolve, reject) {
 			if (entity.runMode) {
 				handleEntityMoveto(entity, locAt(entity.loc, dir))
@@ -196,15 +204,14 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 			}
 		}
 	};
-
+	
+	launchGameboard(getMapSimulation()) //first time launching the game board and setting the table width and height
+	
 	async function playerLoop(game) {
 		await game()
 		setTimeout(playerLoop, player.clockSpeed, game);
 		
 	}
-	
-	launchGameboard(getMapSimulation()) //first time launching the game board and setting the table width and height
-	
 	playerLoop(async function() {
 		ua = nextUserAction
 		nextUserAction = () => {}
