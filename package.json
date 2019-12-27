@@ -4,6 +4,7 @@
   "description": "Kill zoids! Get clovers!",
   "main": "main.js",
   "scripts": {
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,9 +23,12 @@
   },
   "homepage": "https://github.com/AlyaEru/zoirinth#readme",
   "devDependencies": {
+    "css-loader": "^3.4.0",
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
   },
   "husky": {
     "hooks": {

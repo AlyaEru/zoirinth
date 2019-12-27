@@ -10,4 +10,5 @@ Kill zoids! Get clovers!
 git clone ...
 cd zoirinth
 npm install
+npm run build
 ```
