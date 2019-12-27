@@ -1,4 +1,18 @@
-function playLevel(level, score, mazeWidth, mazeHeight) {
+async function manageGame(mazeWidth, mazeHeight) {
+	let score = 10
+	let level = 1
+	while(true) {
+		score = await playLevel(level, score, mazeWidth, mazeHeight)
+		if (score === false) { //died
+			break
+		}
+		level++
+	}
+	console.log('dead')
+}
+
+async function playLevel(level, score, mazeWidth, mazeHeight) {
+	let cloversCollected = 0
 	function rand(max) {
 		return Math.floor(Math.random() * Math.floor(max));
 	}
@@ -24,6 +38,8 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	}
 	const mapHeight = mazeHeight * 2 + 1
 	const mapWidth = mazeWidth * 2 + 1
+	const numClovers = level + 4
+	const numZoids = level + 2
 
 	let map = buildMaze(mazeWidth,mazeHeight,.5, 1 - ((level - 1) % 5)/4)
 	function createZoids(numZoids) {
@@ -50,9 +66,10 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 		shield: false,
 		type: 'player',
 		dead: false,
+		escaped: false,
 	}
-	let zoids = createZoids(3)
-	let clovers = createClovers(5)
+	let zoids = createZoids(numZoids)
+	let clovers = createClovers(numClovers)
 
 	const actions = {
 		go_r: () => {return go(player, 'r')},
@@ -89,12 +106,21 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 			case 'clover': 
 				removeItem(clovers, loc)
 				player.score += 100
+				cloversCollected++
+				if (cloversCollected == numClovers) {
+					generateExit()
+				}
 				player.loc = loc
 				moved = true
 				break
 			case 'zoid': 
 				player.dead = true
 				break
+			case 'lr_portal':
+			case 'ud_portal':
+				player.escaped = true
+				break
+				//handle winning here?
 			}
 		}
 		renderGameboard(getMapSimulation())
@@ -106,6 +132,8 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 			'space',
 			'pod',
 			'superpod',
+			'lr_portal',
+			'ud_portal',
 		]
 		function rotateLeft(dir) {
 			switch (dir) {
@@ -207,14 +235,43 @@ function playLevel(level, score, mazeWidth, mazeHeight) {
 	
 	launchGameboard(getMapSimulation()) //first time launching the game board and setting the table width and height
 	
-	async function playerLoop(game) {
-		await game()
-		setTimeout(playerLoop, player.clockSpeed, game);
-		
+	async function wait(ms) {
+	    return new Promise(resolve => {
+			setTimeout(resolve, ms);
+	    });
 	}
-	playerLoop(async function() {
+	async function playerLoop(game) {
+		while (true) {
+			await game()
+			if (player.escaped || player.dead) {
+				break
+			}
+			await wait(player.clockSpeed)
+		}
+	}
+	await playerLoop(async function() {
 		ua = nextUserAction
 		nextUserAction = () => {}
 		await ua()
 	})
+	
+	function generateExit() {
+		let num = rand(mazeWidth * 2 + mazeHeight * 2)
+		if (num < mazeWidth) {
+			map[0][num * 2 + 1] = 'lr_portal'
+		}
+		else if (num < mazeWidth * 2) {
+			map[mapHeight - 1][(num - mazeWidth) * 2 + 1] = 'lr_portal'
+		}
+		else if (num < mazeWidth * 2 + mazeHeight) {
+			map[(num - 2 * mazeWidth) * 2 + 1][0] = 'ud_portal'
+		}
+		else {
+			map[(num - 2 * mazeWidth - mazeHeight) * 2 + 1][mapWidth - 1] = 'ud_portal'
+		}
+	}
+	if (player.escaped) {
+		return player.score
+	}
+	else return false
 }
