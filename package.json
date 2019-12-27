@@ -21,8 +21,9 @@
     "url": "https://github.com/AlyaEru/zoirinth/issues"
   },
   "homepage": "https://github.com/AlyaEru/zoirinth#readme",
-  "dependencies": {
+  "devDependencies": {
     "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
     "prettier": "^1.19.1"
   },
   "husky": {
@@ -31,7 +32,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js, json, css, html, vue}": [
+    "*.{js, json, css, html, vue}": [
       "prettier --write",
       "git add"
     ]
