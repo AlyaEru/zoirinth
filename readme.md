@@ -4,8 +4,10 @@ Kill zoids! Get clovers!
 
 # Installation
 
-`git clone ...`
+**Prerequisites:** Assumes you have git and nodejs/npm installed. If these steps do not work for you, please submit an issue describing what went wrong.
 
-`cd zoirinth`
-
-`npm install`
+```
+git clone ...
+cd zoirinth
+npm install
+```
