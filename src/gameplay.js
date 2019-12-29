@@ -286,4 +286,6 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 	} else return false
 }
 
-module.exports = manageGame
+module.exports = {
+	manageGame: manageGame
+}

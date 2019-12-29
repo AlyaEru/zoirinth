@@ -1,8 +1,8 @@
-import manageGame from './gameplay'
+import gameplay from './gameplay'
+
+const gameboardWidth = 30
+const gameboardHeight = 18
 
 $(function() {
-	const gameboardWidth = 30
-	const gameboardHeight = 18
-
-	manageGame(gameboardWidth, gameboardHeight)
+	gameplay.manageGame(gameboardWidth, gameboardHeight)
 })
