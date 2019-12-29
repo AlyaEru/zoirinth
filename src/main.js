@@ -1,4 +1,4 @@
-import gameplay from './gameplay'
+const gameplay = require('./gameplay')
 
 const gameboardWidth = 30
 const gameboardHeight = 18

@@ -195,3 +195,7 @@ function setWalls(map) {
 
 	return mapCopy
 }
+
+module.exports = {
+	build: buildMaze
+}

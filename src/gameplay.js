@@ -1,3 +1,5 @@
+buildMaze = require('./buildMaze')
+
 async function manageGame(mazeWidth, mazeHeight) {
 	let score = 10
 	let level = 1
@@ -37,12 +39,18 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 			}
 		}
 	}
+
 	const mapHeight = mazeHeight * 2 + 1
 	const mapWidth = mazeWidth * 2 + 1
 	const numClovers = level + 4
 	const numZoids = level + 2
 
-	let map = buildMaze(mazeWidth, mazeHeight, 0.5, 1 - ((level - 1) % 5) / 4)
+	let map = buildMaze.build(
+		mazeWidth,
+		mazeHeight,
+		0.5,
+		1 - ((level - 1) % 5) / 4
+	)
 	function createZoids(numZoids) {
 		let zoids = []
 
@@ -281,9 +289,12 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 				'ud_portal'
 		}
 	}
+
 	if (player.escaped) {
 		return player.score
-	} else return false
+	} else {
+		return false
+	}
 }
 
 module.exports = {
