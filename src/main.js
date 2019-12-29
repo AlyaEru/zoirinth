@@ -1,8 +1,10 @@
 
 $( document ).ready(function() {
 	
-	const gameboardWidth = 30
-	const gameboardHeight = 18
+	
+	
+	const gameboardWidth = 24
+	const gameboardHeight = 15
 	
 	//playLevel(1,10,gameboardWidth,gameboardHeight)
 	manageGame(gameboardWidth,gameboardHeight)
