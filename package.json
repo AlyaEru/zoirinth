@@ -22,6 +22,9 @@
     "url": "https://github.com/AlyaEru/zoirinth/issues"
   },
   "homepage": "https://github.com/AlyaEru/zoirinth#readme",
+  "dependencies": {
+    "jquery": "^3.4.1"
+  },
   "devDependencies": {
     "css-loader": "^3.4.0",
     "husky": "^3.1.0",
