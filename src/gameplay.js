@@ -1,4 +1,5 @@
-buildMaze = require('./buildMaze')
+const buildMaze = require('./buildMaze')
+const renderMap = require('./renderMap')
 
 async function manageGame(mazeWidth, mazeHeight) {
 	let score = 10
@@ -144,7 +145,7 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 				//handle winning here?
 			}
 		}
-		renderGameboard(getMapSimulation())
+		renderMap.render(getMapSimulation())
 		return moved
 	}
 	function go(entity, dir) {
@@ -183,7 +184,7 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 		return new Promise(function(resolve, reject) {
 			if (entity.runMode) {
 				handleEntityMoveto(entity, locAt(entity.loc, dir))
-				renderGameboard(getMapSimulation())
+				renderMap.render(getMapSimulation())
 				function run() {
 					if (
 						runthrough.includes(lookNext(entity, dir)) &&
@@ -198,7 +199,7 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 				setTimeout(run, entity.clockSpeed)
 			} else {
 				handleEntityMoveto(entity, locAt(entity.loc, dir))
-				renderGameboard(getMapSimulation())
+				renderMap.render(getMapSimulation())
 				resolve()
 			}
 		})
@@ -254,7 +255,7 @@ async function playLevel(level, score, mazeWidth, mazeHeight) {
 		}
 	}
 
-	launchGameboard(getMapSimulation()) //first time launching the game board and setting the table width and height
+	renderMap.launch(getMapSimulation()) //first time launching the game board and setting the table width and height
 
 	async function wait(ms) {
 		return new Promise(resolve => {
