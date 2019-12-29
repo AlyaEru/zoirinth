@@ -1,8 +1,6 @@
 const simulateMap = require('./simulateMap')
 
 function listen(map, player) {
-	let cloversCollected = 0
-	let numClovers = clovers.length
 	document.onkeydown = function(e) {
 		e = e || window.event
 		switch (e.code) {
@@ -40,30 +38,7 @@ function go(map, player, entity, dir) {
 		'player',
 		'player_shield'
 	]
-	function rotateLeft(dir) {
-		switch (dir) {
-			case 'l':
-				return 'd'
-			case 'r':
-				return 'u'
-			case 'u':
-				return 'l'
-			case 'd':
-				return 'r'
-		}
-	}
-	function rotateRight(dir) {
-		switch (dir) {
-			case 'l':
-				return 'u'
-			case 'r':
-				return 'd'
-			case 'u':
-				return 'r'
-			case 'd':
-				return 'l'
-		}
-	}
+
 	if (entity.runMode) {
 		if (handleEntityMoveto(map, player, entity, locAt(entity.loc, dir))) {
 			if (
@@ -79,6 +54,32 @@ function go(map, player, entity, dir) {
 	} else {
 		handleEntityMoveto(map, player, entity, locAt(entity.loc, dir))
 	}
+
+	function rotateLeft(dir) {
+		switch (dir) {
+			case 'l':
+				return 'd'
+			case 'r':
+				return 'u'
+			case 'u':
+				return 'l'
+			case 'd':
+				return 'r'
+		}
+	}
+
+	function rotateRight(dir) {
+		switch (dir) {
+			case 'l':
+				return 'u'
+			case 'r':
+				return 'd'
+			case 'u':
+				return 'r'
+			case 'd':
+				return 'l'
+		}
+	}
 }
 
 function removeItem(items, loc) {
@@ -88,6 +89,7 @@ function removeItem(items, loc) {
 		}
 	}
 }
+
 function handleEntityMoveto(map, player, entity, loc) {
 	let moved = false
 	//TODO: make this work with entity other than player
@@ -133,6 +135,7 @@ function handleEntityMoveto(map, player, entity, loc) {
 	}
 	return moved
 }
+
 function locAt(loc, dir) {
 	switch (dir) {
 		case 'l':
@@ -145,6 +148,7 @@ function locAt(loc, dir) {
 			return {x: loc.x, y: loc.y + 1}
 	}
 }
+
 function lookNext(entity, dir) {
 	return itemAt(map, player, locAt(entity.loc, dir))
 }
@@ -168,22 +172,25 @@ function itemAt(map, player, loc) {
 	}
 }
 
-let zoidModes = ['random']
-
 function zoidAction(zoid) {
 	let dirs = ['l', 'r', 'u', 'd']
+	let zoidModes = ['random']
 
 	return () => {
+		// Configure zoid
 		zoid.runMode = true
 		if (zoid.mode === '') {
 			zoid.mode = zoidModes[rand(zoidModes.length)]
 		}
-		if (zoid.mode === 'random') {
-			zoid.actionQueue.unshift(() =>
-				go(map, player, zoid, dirs[rand(dirs.length)])
-			)
+
+		// Determine action
+		switch (zoid.mode) {
+			case 'random':
+				zoid.actionQueue.unshift(() =>
+					go(map, player, zoid, dirs[rand(dirs.length)])
+				)
+				break
 		}
-		zoid.actionQueue.push(zoidAction(zoid))
 	}
 }
 
