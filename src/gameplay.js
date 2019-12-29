@@ -1,5 +1,7 @@
-const buildMaze = require("./buildMaze");
+const simulateMap = require("./simulateMap.js");
 const renderMap = require("./renderMap");
+const actions = require("./actions");
+const util = require("./utilities");
 
 let clovers = [];
 let zoids = [];
@@ -43,11 +45,18 @@ async function manageLevel(level, mazeWidth, mazeHeight) {
   const numClovers = level + 4;
   const numZoids = 1; //level + 2
 
-  map = initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level);
-  listen(player);
+  map = simulateMap.initializeMap(
+    player,
+    numClovers,
+    numZoids,
+    mazeWidth,
+    mazeHeight,
+    level
+  );
+  actions.listen(map, player);
 
   function generateExit() {
-    let num = rand(mazeWidth * 2 + mazeHeight * 2);
+    let num = util.rand(mazeWidth * 2 + mazeHeight * 2);
     if (num < mazeWidth) {
       map[0][num * 2 + 1] = "lr_portal";
     } else if (num < mazeWidth * 2) {
@@ -86,7 +95,9 @@ async function manageLevel(level, mazeWidth, mazeHeight) {
         generateExit();
         player.clovers = 0;
       }
-      renderGameboard(getMapSimulation(map, [player], zoids, clovers));
+      renderMap.render(
+        simulateMap.getMapSimulation(map, [player], zoids, clovers)
+      );
       if (player.escaped || player.dead) {
         break;
       }
@@ -97,3 +108,7 @@ async function manageLevel(level, mazeWidth, mazeHeight) {
   await levelLoop();
   return player.dead;
 }
+
+module.exports = {
+  manageGame: manageGame
+};

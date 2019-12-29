@@ -1,4 +1,6 @@
-function listen(player) {
+const simulateMap = require("./simulateMap");
+
+function listen(map, player) {
   let cloversCollected = 0;
   let numClovers = clovers.length;
   document.onkeydown = function(e) {
@@ -6,19 +8,19 @@ function listen(player) {
     switch (e.code) {
       case "ArrowDown":
       case "KeyS":
-        player.actionQueue.push(() => go(player, "d"));
+        player.actionQueue.push(() => go(map, player, player, "d"));
         break;
       case "ArrowUp":
       case "KeyW":
-        player.actionQueue.push(() => go(player, "u"));
+        player.actionQueue.push(() => go(map, player, player, "u"));
         break;
       case "ArrowLeft":
       case "KeyA":
-        player.actionQueue.push(() => go(player, "l"));
+        player.actionQueue.push(() => go(map, player, player, "l"));
         break;
       case "ArrowRight":
       case "KeyD":
-        player.actionQueue.push(() => go(player, "r"));
+        player.actionQueue.push(() => go(map, player, player, "r"));
         break;
       case "KeyR":
         player.runMode = !player.runMode;
@@ -27,7 +29,7 @@ function listen(player) {
   };
 }
 
-function go(entity, dir) {
+function go(map, player, entity, dir) {
   let runthrough = [
     "clover",
     "space",
@@ -63,19 +65,19 @@ function go(entity, dir) {
     }
   }
   if (entity.runMode) {
-    if (handleEntityMoveto(entity, locAt(entity.loc, dir))) {
+    if (handleEntityMoveto(map, player, entity, locAt(entity.loc, dir))) {
       if (
         runthrough.includes(lookNext(entity, dir)) &&
         !runthrough.includes(lookNext(entity, rotateRight(dir))) &&
         !runthrough.includes(lookNext(entity, rotateLeft(dir)))
       ) {
         entity.actionQueue.unshift(function() {
-          go(entity, dir);
+          go(map, player, entity, dir);
         });
       }
     }
   } else {
-    handleEntityMoveto(entity, locAt(entity.loc, dir));
+    handleEntityMoveto(map, player, entity, locAt(entity.loc, dir));
   }
 }
 
@@ -86,11 +88,11 @@ function removeItem(items, loc) {
     }
   }
 }
-function handleEntityMoveto(entity, loc) {
+function handleEntityMoveto(map, player, entity, loc) {
   let moved = false;
   //TODO: make this work with entity other than player
   if (entity.getType() == "player") {
-    switch (itemAt(loc)) {
+    switch (itemAt(map, player, loc)) {
       case "space":
         player.loc = loc;
         moved = true;
@@ -112,7 +114,7 @@ function handleEntityMoveto(entity, loc) {
       //handle winning here?
     }
   } else {
-    switch (itemAt(loc)) {
+    switch (itemAt(map, player, loc)) {
       case "space":
         entity.loc = loc;
         moved = true;
@@ -144,20 +146,26 @@ function locAt(loc, dir) {
   }
 }
 function lookNext(entity, dir) {
-  return itemAt(locAt(entity.loc, dir));
+  return itemAt(map, player, locAt(entity.loc, dir));
 }
-function itemAt(loc) {
+
+function itemAt(map, player, loc) {
   if (
     loc.x < 0 ||
-    loc.x > getMapSimulation(map, [player], zoids, clovers)[0].length
+    loc.x >
+      simulateMap.getMapSimulation(map, [player], zoids, clovers)[0].length
   ) {
     return "outside";
   } else if (
     loc.y < 0 ||
-    loc.y > getMapSimulation(map, [player], zoids, clovers).length
+    loc.y > simulateMap.getMapSimulation(map, [player], zoids, clovers).length
   ) {
     return "outside";
-  } else return getMapSimulation(map, [player], zoids, clovers)[loc.y][loc.x];
+  } else {
+    return simulateMap.getMapSimulation(map, [player], zoids, clovers)[loc.y][
+      loc.x
+    ];
+  }
 }
 
 let zoidModes = ["random"];
@@ -171,7 +179,9 @@ function zoidAction(zoid) {
       zoid.mode = zoidModes[rand(zoidModes.length)];
     }
     if (zoid.mode === "random") {
-      zoid.actionQueue.unshift(() => go(zoid, dirs[rand(dirs.length)]));
+      zoid.actionQueue.unshift(() =>
+        go(map, player, zoid, dirs[rand(dirs.length)])
+      );
     }
     zoid.actionQueue.push(zoidAction(zoid));
   };
@@ -179,8 +189,5 @@ function zoidAction(zoid) {
 
 module.exports = {
   listen: listen,
-  go: go,
-  removeItem: removeItem,
-  handleEntityMoveto: handleEntityMoveto,
   zoidAction: zoidAction
 };

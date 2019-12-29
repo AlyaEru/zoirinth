@@ -1,3 +1,8 @@
+const buildMaze = require("./buildMaze");
+const renderMap = require("./renderMap");
+const actions = require("./actions");
+const util = require("./utilities");
+
 function getMapSimulation(map, ...entities) {
   mapCopy = JSON.parse(JSON.stringify(map)); //deep clone map
   for (let entity of entities) {
@@ -8,15 +13,27 @@ function getMapSimulation(map, ...entities) {
   return mapCopy;
 }
 
-function initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level) {
-  let map = buildMaze(mazeWidth, mazeHeight, 0.5, 1 - ((level - 1) % 5) / 4);
+function initializeMap(
+  player,
+  numClovers,
+  numZoids,
+  mazeWidth,
+  mazeHeight,
+  level
+) {
+  let map = buildMaze.build(
+    mazeWidth,
+    mazeHeight,
+    0.5,
+    1 - ((level - 1) % 5) / 4
+  );
 
   let takenPoints = [];
   function randSpawnPoint() {
     while (true) {
       point = {
-        x: rand(mazeWidth) * 2 + 1,
-        y: rand(mazeHeight) * 2 + 1
+        x: util.rand(mazeWidth) * 2 + 1,
+        y: util.rand(mazeHeight) * 2 + 1
       };
       let match = false;
       for (takenPoint of takenPoints) {
@@ -42,7 +59,7 @@ function initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level) {
         mode: "",
         dir: ""
       });
-      zoids[i].actionQueue.push(zoidAction(zoids[i]));
+      zoids[i].actionQueue.push(actions.zoidAction(zoids[i]));
     }
     return zoids;
   }
@@ -62,6 +79,11 @@ function initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level) {
   player.loc = randSpawnPoint();
   score = player.score;
 
-  launchGameboard(getMapSimulation(map, [player], zoids, clovers)); //first time launching the game board and setting the table width and height
+  renderMap.launch(getMapSimulation(map, [player], zoids, clovers)); //first time launching the game board and setting the table width and height
   return map;
 }
+
+module.exports = {
+  initializeMap: initializeMap,
+  getMapSimulation: getMapSimulation
+};
