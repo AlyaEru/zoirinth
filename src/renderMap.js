@@ -22,8 +22,12 @@ function renderGameboard(maze){
 	
 	$('table#gameboard tr td').each(function(){
          //processing this cell
-        $(this).removeClass()
-		$(this).addClass(maze[Math.floor(i/width)][i%width])
+		let currentCell = maze[Math.floor(i/width)][i%width]
+        if (!$(this).hasClass(currentCell)){
+			$(this).removeClass()
+			$(this).addClass(currentCell)
+		}
+		
 		i++
 	});
 }
