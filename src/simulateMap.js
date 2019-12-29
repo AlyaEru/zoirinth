@@ -8,12 +8,8 @@ function getMapSimulation(map, ...entities) {
 	return mapCopy
 }
 
-function initializeMap(numClovers, numZoids, mazeWidth, mazeHeight) {
+function initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level) {
 	let map = buildMaze(mazeWidth,mazeHeight,.5, 1 - ((level - 1) % 5)/4)
-	
-	function rand(max) {
-		return Math.floor(Math.random() * Math.floor(max));
-	}
 	
 	let takenPoints = []
 	function randSpawnPoint() {

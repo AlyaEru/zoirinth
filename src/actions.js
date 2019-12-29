@@ -1,5 +1,6 @@
 function listen(player, simulateMapFunc, mapWidth, mapHeight) {
 	let cloversCollected = 0
+	let numClovers = clovers.length
 	document.onkeydown = function (e) {
 	e = e || window.event;
 		switch (e.code) {
@@ -92,8 +93,8 @@ function listen(player, simulateMapFunc, mapWidth, mapHeight) {
 				removeItem(clovers, loc)
 				player.score += 100
 				cloversCollected++
-				if (cloversCollected == clovers.length) {
-					generateExit()
+				if (cloversCollected === numClovers) {
+					player.collectedClovers = true
 				}
 				player.loc = loc
 				moved = true
