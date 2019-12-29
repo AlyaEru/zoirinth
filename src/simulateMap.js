@@ -39,7 +39,10 @@ function initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level) {
 				getType: () => 'zoid',
 				clovers: 0,
 				actionQueue: [],
+				mode: '',
+				dir: '',
 			})
+			zoids[i].actionQueue.push(zoidAction(zoids[i]))
 		}
 		return zoids
 	}

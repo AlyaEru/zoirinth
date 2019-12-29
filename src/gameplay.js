@@ -15,8 +15,9 @@ let player = {
 	shield: false,
 	dead: false,
 	escaped: false,
-	collectedClovers: false,
+	clovers: 0,
 }
+let map = [[]]
 
 async function manageGame(mazeWidth, mazeHeight) {
 	let score = 10
@@ -38,10 +39,10 @@ async function manageLevel(level, mazeWidth, mazeHeight) {
 	const mapHeight = mazeHeight * 2 + 1
 	const mapWidth = mazeWidth * 2 + 1
 	const numClovers = level + 4
-	const numZoids = 0//level + 2
+	const numZoids = 1//level + 2
 	
 	map = initializeMap(numClovers, numZoids, mazeWidth, mazeHeight, level)
-	listen(player, () => getMapSimulation(map, [player], zoids, clovers), mapWidth, mapHeight)
+	listen(player)
 	
 	function generateExit() {
 		let num = rand(mazeWidth * 2 + mazeHeight * 2)
@@ -68,8 +69,9 @@ async function manageLevel(level, mazeWidth, mazeHeight) {
 		}
 		async function doNextAction(entity) {
 			if (entity.actionQueue.length > 0) {
-				await entity.actionQueue[0]()
+				action = entity.actionQueue[0]
 				entity.actionQueue = entity.actionQueue.slice(1)
+				await action()
 			}
 		}
 		let nextZoid = 0
@@ -80,9 +82,9 @@ async function manageLevel(level, mazeWidth, mazeHeight) {
 				nextZoid++
 				nextZoid = nextZoid % zoids.length
 			}
-			if (player.collectedClovers) {
+			if (player.clovers === numClovers) {
 				generateExit()
-				player.collectedClovers = false
+				player.clovers = 0
 			}
 			renderGameboard(getMapSimulation(map, [player], zoids, clovers))
 			if (player.escaped || player.dead) {
