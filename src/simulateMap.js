@@ -1,7 +1,8 @@
+const util = require('./utilities')
+const player = require('./player').getPlayer()
 const buildMaze = require('./buildMaze')
 const renderMap = require('./renderMap')
 const actions = require('./actions')
-const util = require('./utilities')
 
 let mazeWidth, mazeHeight
 
@@ -15,7 +16,7 @@ function getMapSimulation(map, ...entities) {
 	return mapCopy
 }
 
-function initializeMap(player, numClovers, numZoids, width, height, level) {
+function initializeMap(numClovers, numZoids, width, height, level) {
 	mazeWidth = width
 	mazeHeight = height
 

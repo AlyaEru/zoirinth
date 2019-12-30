@@ -1,51 +1,14 @@
-const directions = ['l', 'r', 'u', 'd']
-let width, height, straightness, ratioWeak
+const util = require('./utilities')
+const dir = require('./directions')
 
-function buildMaze(w, h, s, r) {
+let width, height
+let straightness = 0.5
+let ratioWeak = 0.5
+
+function buildMaze(w, h) {
 	width = w
 	height = h
-	straightness = s
-	ratioWeak = r
 	return setWalls(convertMaze(createMaze()))
-}
-
-function rand(max) {
-	return Math.floor(Math.random() * Math.floor(max))
-}
-
-function getMazePoint() {
-	return {
-		l: true,
-		r: true,
-		u: true,
-		d: true
-	}
-}
-
-function opposite(direction) {
-	switch (direction) {
-		case 'l':
-			return 'r'
-		case 'r':
-			return 'l'
-		case 'u':
-			return 'd'
-		case 'd':
-			return 'u'
-	}
-}
-
-function go(start, direction) {
-	switch (direction) {
-		case 'l':
-			return {x: start.x - 1, y: start.y}
-		case 'r':
-			return {x: start.x + 1, y: start.y}
-		case 'u':
-			return {x: start.x, y: start.y - 1}
-		case 'd':
-			return {x: start.x, y: start.y + 1}
-	}
 }
 
 function untouched(mazePoint) {
@@ -67,21 +30,21 @@ function createMaze() {
 	for (i = 0; i < height; i++) {
 		let mazeRow = []
 		for (j = 0; j < width; j++) {
-			mazeRow.push(getMazePoint())
+			mazeRow.push(dir.getPoint())
 		}
 		maze.push(mazeRow)
 	}
 
-	previousDirection = directions[rand(4)]
+	previousDirection = util.randElem(dir.dirs)
 	let loc = {
-		x: rand(width),
-		y: rand(height)
+		x: util.randInt(width),
+		y: util.randInt(height)
 	}
 
 	let explored = 1 //count initial location
 	while (explored < height * width) {
-		let possibleDirections = directions.filter(
-			dir => dir != opposite(previousDirection)
+		let possibleDirections = dir.dirs.filter(
+			dir => dir != dir.opposite(previousDirection)
 		)
 
 		let direction = previousDirection
@@ -93,7 +56,7 @@ function createMaze() {
 			direction = possibleOtherDirections[rand(possibleOtherDirections.length)]
 		}
 
-		newLoc = go(loc, direction)
+		newLoc = dir.move(loc, direction)
 		let trapped = false
 		while (!canGo(maze, newLoc)) {
 			possibleDirections = possibleDirections.filter(dir => dir != direction)
@@ -102,8 +65,8 @@ function createMaze() {
 				trapped = true
 				break
 			}
-			direction = possibleDirections[rand(possibleDirections.length)]
-			newLoc = go(loc, direction)
+			direction = util.randElem(possibleDirections)
+			newLoc = dir.move(loc, direction)
 		}
 
 		if (trapped) {
@@ -112,14 +75,14 @@ function createMaze() {
 					x: rand(width),
 					y: rand(height)
 				}
-				previousDirection = directions[rand(4)]
+				previousDirection = util.randElem(dir.dirs)
 				if (!untouched(maze[loc.y][loc.x])) {
 					break
 				}
 			}
 		} else {
 			maze[loc.y][loc.x][direction] = false
-			maze[newLoc.y][newLoc.x][opposite(direction)] = false
+			maze[newLoc.y][newLoc.x][dir.opposite(direction)] = false
 			loc = newLoc
 			explored++
 			previousDirection = direction
@@ -165,7 +128,7 @@ function convertMaze(maze) {
 }
 
 function setWalls(map) {
-	mapCopy = JSON.parse(JSON.stringify(map))
+	mapCopy = JSON.parse(JSON.stringify(map)) // No need to do this. Should be removed.
 	for (i = 0; i < height * 2 + 1; i++) {
 		for (j = 0; j < width * 2 + 1; j++) {
 			if (map[i][j] == 'w') {
