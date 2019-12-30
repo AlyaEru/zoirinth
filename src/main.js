@@ -4,7 +4,7 @@ window.$ = window.jQuery = require('jquery')
 // Start game
 const gameplay = require('./gameplay')
 
-const gameboardWidth = 30
-const gameboardHeight = 18
+const gameboardWidth = 24
+const gameboardHeight = 15
 
 gameplay.manageGame(gameboardWidth, gameboardHeight)
