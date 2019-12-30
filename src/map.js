@@ -1,16 +1,19 @@
+const util = require('./utilities')
 const dirs = require('./directions')
 const buildMaze = require('./buildMaze')
+const playerSystem = require('./player')
+const zoidSystem = require('./zoid')
 
 function createMap(width, height, level) {
 	let map = {
 		width: width,
 		height: height,
 		level: level,
+		entities: [],
 		clovers: level + 4,
-		entities: []
+		zoids: 1
 	}
 
-	// Do this heavy work in another file
 	map.maze = buildMaze.build(width, height)
 
 	map.moveEntity = (entity, direction) => {
@@ -21,6 +24,10 @@ function createMap(width, height, level) {
 		removeEntity(map, item)
 	}
 
+	map.spawnEntity = entity => {
+		spawnEntity(map, entity)
+	}
+
 	map.getPlayer = () => {
 		return getPlayer(map.entities)
 	}
@@ -29,7 +36,38 @@ function createMap(width, height, level) {
 		generateExit(map)
 	}
 
+	createEntities(map)
+	console.log(map)
+
 	return map
+}
+
+function createEntities(map) {
+	playerSystem.createPlayer(map)
+	createZoids(map, map.zoids)
+	createClovers(map, map.clovers)
+}
+
+function createZoids(map, numZoids) {
+	let zoids = []
+
+	for (let i = 0; i < numZoids; i++) {
+		zoids.push(zoidSystem.create(map))
+	}
+	return zoids
+}
+
+function createClovers(map, numClovers) {
+	let clovers = []
+
+	for (let i = 0; i < numClovers; i++) {
+		clovers.push({
+			loc: randSpawnPoint(map),
+			getType: () => 'clover'
+		})
+	}
+
+	map.entities.concat(clovers)
 }
 
 function generateExit(map) {
@@ -121,6 +159,32 @@ function itemAt(map, loc) {
 		return 'outside'
 	} else {
 		return map[loc.y][loc.x]
+	}
+}
+
+function spawnEntity(map, entity) {
+	let spawnPoint = randSpawnPoint(map)
+	entity.loc = spawnPoint
+	map.entities.push(entity)
+}
+
+function randSpawnPoint(map) {
+	let takenPoints = []
+	while (true) {
+		point = {
+			x: util.randInt(map.width),
+			y: util.randInt(map.height)
+		}
+		let match = false
+		for (takenPoint of takenPoints) {
+			if (takenPoint.x == point.x && takenPoint.y == point.y) {
+				match = true
+			}
+		}
+		if (match == false) {
+			takenPoints.push(point)
+			return point
+		}
 	}
 }
 

@@ -30,6 +30,10 @@ function createPlayer(map) {
 		.on('keydown', event => {
 			playerEvent(map, event)
 		})
+
+	map.spawnEntity(player)
+
+	return player
 }
 
 function playerEvent(map, event) {

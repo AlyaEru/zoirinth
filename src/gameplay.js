@@ -1,4 +1,3 @@
-const util = require('./utilities')
 const mapSystem = require('./map')
 const renderMap = require('./renderMap')
 

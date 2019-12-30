@@ -8,7 +8,6 @@ function create(map) {
 	let zoid = {
 		actionQueue: [],
 		runMode: true,
-		loc: randSpawnPoint(),
 		mode: '',
 		dir: ''
 	}
@@ -20,6 +19,10 @@ function create(map) {
 	}
 
 	zoid.addAction = addAction(map, zoid)
+
+	map.spawnEntity(zoid)
+
+	return zoid
 }
 
 // Returns a function that adds an action to the zoid's actionQueue
