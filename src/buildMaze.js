@@ -44,7 +44,7 @@ function createMaze() {
 	let explored = 1 //count initial location
 	while (explored < height * width) {
 		let possibleDirections = dir.dirs.filter(
-			dir => dir != dir.opposite(previousDirection)
+			direction => direction != dir.opposite(previousDirection)
 		)
 
 		let direction = previousDirection
@@ -53,7 +53,7 @@ function createMaze() {
 				dir => dir != previousDirection
 			)
 
-			direction = possibleOtherDirections[rand(possibleOtherDirections.length)]
+			direction = util.randElem(possibleOtherDirections)
 		}
 
 		newLoc = dir.move(loc, direction)
@@ -72,8 +72,8 @@ function createMaze() {
 		if (trapped) {
 			while (true) {
 				loc = {
-					x: rand(width),
-					y: rand(height)
+					x: util.randInt(width),
+					y: util.randInt(height)
 				}
 				previousDirection = util.randElem(dir.dirs)
 				if (!untouched(maze[loc.y][loc.x])) {

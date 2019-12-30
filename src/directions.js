@@ -1,5 +1,27 @@
 const dirs = ['l', 'r', 'u', 'd']
 
+function getPoint() {
+	return {
+		l: true,
+		r: true,
+		u: true,
+		d: true
+	}
+}
+
+function opposite(direction) {
+	switch (direction) {
+		case 'l':
+			return 'r'
+		case 'r':
+			return 'l'
+		case 'u':
+			return 'd'
+		case 'd':
+			return 'u'
+	}
+}
+
 function rotateLeft(dir) {
 	switch (dir) {
 		case 'l':
@@ -39,28 +61,6 @@ function locAt(loc, dir) {
 	}
 }
 
-function getPoint() {
-	return {
-		l: true,
-		r: true,
-		u: true,
-		d: true
-	}
-}
-
-function opposite(direction) {
-	switch (direction) {
-		case 'l':
-			return 'r'
-		case 'r':
-			return 'l'
-		case 'u':
-			return 'd'
-		case 'd':
-			return 'u'
-	}
-}
-
 function move(start, direction) {
 	switch (direction) {
 		case 'l':
@@ -76,10 +76,10 @@ function move(start, direction) {
 
 module.exports = {
 	dirs: dirs,
+	getPoint: getPoint,
 	opposite: opposite,
 	rotateLeft: rotateLeft,
 	rotateRight: rotateRight,
 	locAt: locAt,
-	getPoint: getPoint,
 	move: move
 }
