@@ -6,17 +6,43 @@
     src: url("clacon.ttf");
 }
 
-body{background-color:black;font:26px gameFont;}
+body{background-color:black;font:26px gameFont;color:#ff860d;margin:0;padding:0;}
 
 div#main {
-	background-color:black;
-	width:100%;
-	margin:auto;
+	width:auto;
+	/*border-left:3px double #ff860d;*/
+	position:absolute;
+	right:0;
+	top:0;
+	padding:10px;
 }
 
-#left-menu, #right-menu, #user-message {
-	color:#ff860d;
+
+.fly-left::after{
+	position:relative;
+	right:0;
+	animation: flyleft 1s linear infinite;
+}
+
+/* menus */
+
+
+#left-menu, #top-menu {
 	list-style-type:none;
+}
+#points {
+	display: block;
+	position:absolute;
+	margin:10px;
+	right:0;
+	top:0;
+}
+#level {
+	display: block;
+	position:absolute;
+	margin:10px;
+	left:0;
+	top:0;
 }
 
 
@@ -24,6 +50,7 @@ li.off{
 	display:none;
 }
 
+/* gameboard */
 
 table#gameboard {
 	border:none;
@@ -38,22 +65,25 @@ table#gameboard tr{
 	padding:0;
 	line-height:16px;
 }
-table#gameboard tr td{
+table#gameboard tr td, span.hovertext {
 	font-weight:normal;
 	white-space:pre;
 	border-spacing:0;
 	padding:0;
 	display:inline;
+	position:relative;
 }
-table#gameboard tr td::before {position:absolute;margin-left:.5em;display:none;}
-table#gameboard tr td:hover::before {color:#ff860d;background-color:#000;display:inline;}
-
+table#gameboard tr td::before, span.hovertext::before {z-index:1;position:absolute;right:0;margin-right:.6em;display:none;pointer-events: none;}
+table#gameboard tr td:hover::before, span.hovertext:hover::before {color:#ff860d;background-color:#000;display:inline;}
+/*table#gameboard tr td:hover::after {animation: blinker .5s linear infinite;}*/
 
 .player::after {color:#fff;content: "☺";} .player::before {content: "I am the player"}
 
 
 .player_shield::after {color:#fff;content: "☺";font-weight:600;} .player_shield::before {content: "I am the shielded player"}
-.player_dead::after {color:#f00;content: "☼";}
+.player_dead::after {color:#f00;content: "☼";} .player_dead::before {content: "You died"}
+.player_trapped::after {color:#fff;content: "☺";animation: blinker .4s step-start infinite;} .player_trapped::before {content: "I am the trapped player"}
+.player_shield_trapped::after {color:#fff;content: "☺";animation: blinker .4s step-start infinite;font-weight:600;} .player_shield_trapped::before {content: "I am the shielded and trapped player"}
 
 .zoid::after {color:#a52188;content: "☻";} .zoid::before {content: "I am an enemy zoid"}
 .zoidrone::after {color:#999;content: "☻";} .zoidrone::before {content: "I am a zoidrone"}
@@ -64,7 +94,7 @@ table#gameboard tr td:hover::before {color:#ff860d;background-color:#000;display
 .superpod::after {color:#42f596;content: "♥";} .superpod::before {content: "A superpod"}
 
 .trap::after {color:yellow;content: "♦";} .trap::before {content: "I am a trap"}
-.mine::after {color:#ff602a; animation: blinker .5s step-start infinite;content: "+";} .mine::before {content: "A mine"}
+.mine::after {color:#ff602a; animation: blinker .7s step-start infinite;content: "+";} .mine::before {content: "A mine"}
 .blackhole::after {color:#f00;content: "*";}
 
 .space::after {color:black;content: " ";} /*.space::before {content: "Nothing"}*/
@@ -108,8 +138,18 @@ table#gameboard tr td:hover::before {color:#ff860d;background-color:#000;display
 .explode8::after {color:#ff602a;content: "░"; animation: explode2 .3s step-start infinite;}
 .explode9::after {color:#ff602a;content: "░"; animation: explode3 .3s step-start infinite;}
 
+.bullet_u::after {color:yellow;content: "🡑";}
+.bullet_d::after {color:yellow;content: "🡓";}
+.bullet_l::after {color:yellow;content: "←";}
+.bullet_r::after {color:yellow;content: "→";}
+
+.explode_bullet::after {color:yellow;content: "☼";animation: explode1 .3s step-start infinite;}
+
+
+/* animations */
+
 @keyframes blinker {
-  50% {
+  65% {
     opacity: 0;
   }
 }
@@ -146,5 +186,22 @@ table#gameboard tr td:hover::before {color:#ff860d;background-color:#000;display
   }
   100% {
     opacity: .7;
+  }
+}
+@keyframes explode4 {
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: .5;
+  }
+  100% {
+    opacity: .2;
+  }
+}
+
+@keyframes flyleft {
+  100% {
+    right:15em;
   }
 }
