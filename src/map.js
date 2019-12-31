@@ -151,10 +151,15 @@ function handleEntityMove(map, entity, loc) {
 				break
 			//handle winning here?
 		}
-	} else if (entity.getType() == 'zoid') {
+	} else if (entity.type === 'zoid') {
 		let zoid = entity // Renamed for clarity
 		switch (itemAt(map, loc)) {
-			case ('space', 'clover'):
+			case 'space':
+				zoid.loc = loc
+				return true
+			case 'clover':
+				zoid.clovers++
+				removeClover(map, loc)
 				zoid.loc = loc
 				return true
 			case 'player':

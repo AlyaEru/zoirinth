@@ -11,8 +11,10 @@ function create(map) {
 		mode: '',
 		dir: ''
 	}
+	zoid.actionQueue.push(addAction(map, zoid))
 
-	;(zoid.type = 'zoid'), (zoid.mode = util.randElem(zoidModes))
+	zoid.type = 'zoid'
+	zoid.mode = util.randElem(zoidModes)
 
 	zoid.getType = () => {
 		return 'zoid'
@@ -35,8 +37,25 @@ function addAction(map, zoid) {
 				)
 				break
 		}
+		zoid.actionQueue.push(addAction(map, zoid))
 	}
 }
+
+/*function zoidAction(zoid) {
+	let dirs = ['l','r','u','d']
+	
+	return () => {
+		zoid.runMode = true
+		if (zoid.mode === '') {
+			zoid.mode = zoidModes[rand(zoidModes.length)]
+		}
+		if (zoid.mode === 'random') {
+			
+			zoid.actionQueue.unshift(() => go(zoid, dirs[rand(dirs.length)]))
+			}
+		zoid.actionQueue.push(zoidAction(zoid))
+	}
+}*/
 
 module.exports = {
 	create: create

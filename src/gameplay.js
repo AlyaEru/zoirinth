@@ -3,7 +3,6 @@ const renderMap = require('./renderMap')
 const playerSystem = require('./player')
 
 async function manageGame(width, height) {
-	console.log('hi')
 	let level = 0
 	let died = false
 	while (!died) {
@@ -37,7 +36,7 @@ async function levelLoop(map, player) {
 			}
 		}
 
-		if (player.clovers == map.clovers) {
+		if (player.clovers === map.clovers) {
 			map.generateExit()
 		}
 
