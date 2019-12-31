@@ -16,7 +16,7 @@ function createPlayer(map) {
 		type: 'player'
 	}
 
-	player.getType = () => {
+	player.getClass = () => {
 		if (player.dead) {
 			return 'player_dead'
 		} else if (player.shield) {

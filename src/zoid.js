@@ -8,15 +8,14 @@ function create(map) {
 	let zoid = {
 		actionQueue: [],
 		runMode: true,
-		mode: '',
-		dir: ''
+		mode: ''
 	}
 	zoid.actionQueue.push(addAction(map, zoid))
 
 	zoid.type = 'zoid'
 	zoid.mode = util.randElem(zoidModes)
 
-	zoid.getType = () => {
+	zoid.getClass = () => {
 		return 'zoid'
 	}
 
@@ -40,22 +39,6 @@ function addAction(map, zoid) {
 		zoid.actionQueue.push(addAction(map, zoid))
 	}
 }
-
-/*function zoidAction(zoid) {
-	let dirs = ['l','r','u','d']
-	
-	return () => {
-		zoid.runMode = true
-		if (zoid.mode === '') {
-			zoid.mode = zoidModes[rand(zoidModes.length)]
-		}
-		if (zoid.mode === 'random') {
-			
-			zoid.actionQueue.unshift(() => go(zoid, dirs[rand(dirs.length)]))
-			}
-		zoid.actionQueue.push(zoidAction(zoid))
-	}
-}*/
 
 module.exports = {
 	create: create

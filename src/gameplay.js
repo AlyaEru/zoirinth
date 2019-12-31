@@ -40,7 +40,7 @@ async function levelLoop(map, player) {
 			map.generateExit()
 		}
 
-		renderMap.render(map.simulate())
+		renderMap.render(map.simulateReal())
 
 		await wait(clockSpeed)
 	}

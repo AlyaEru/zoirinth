@@ -9,7 +9,7 @@ function createMap(width, height, level) {
 		width: width,
 		height: height,
 		level: level,
-		entities: [],
+		entities: {},
 		actors: [],
 		clovers: level + 4,
 		zoids: 1
@@ -19,6 +19,10 @@ function createMap(width, height, level) {
 
 	map.simulate = () => {
 		return simulate(map)
+	}
+
+	map.simulateReal = () => {
+		return simulateReal(map)
 	}
 
 	map.moveEntity = (entity, direction) => {
@@ -68,7 +72,7 @@ function createClovers(map, numClovers) {
 	for (let i = 0; i < numClovers; i++) {
 		clovers.push({
 			loc: randSpawnPoint(map),
-			getType: () => 'clover',
+			getClass: () => 'clover',
 			type: 'clover'
 		})
 	}
@@ -95,6 +99,16 @@ function simulate(map) {
 	for (let entity of Object.values(map.entities)) {
 		for (let i = 0; i < entity.length; i++) {
 			mapCopy[entity[i].loc.y][entity[i].loc.x] = entity[i].type
+		}
+	}
+	return mapCopy
+}
+
+function simulateReal(map) {
+	mapCopy = JSON.parse(JSON.stringify(map.maze)) //deep clone map
+	for (let entity of Object.values(map.entities)) {
+		for (let i = 0; i < entity.length; i++) {
+			mapCopy[entity[i].loc.y][entity[i].loc.x] = entity[i].getClass()
 		}
 	}
 	return mapCopy
@@ -142,7 +156,7 @@ function handleEntityMove(map, entity, loc) {
 				player.loc = loc
 				return true
 			case 'zoid':
-				player.dead = true
+				playerSystem.getPlayer().dead = true
 				break
 			case 'lr_portal':
 			case 'ud_portal':
@@ -163,7 +177,7 @@ function handleEntityMove(map, entity, loc) {
 				zoid.loc = loc
 				return true
 			case 'player':
-				player.dead = true
+				playerSystem.getPlayer().dead = true
 				return true
 		}
 	}
@@ -232,13 +246,8 @@ function removeClover(map, loc) {
 	}
 }
 
-function getPlayer(entities) {
-	return entities.filter(entity => {
-		return entity.getType() == 'player'
-	})
-}
-
 module.exports = {
 	createMap: createMap,
-	simulate: simulate
+	simulate: simulate,
+	simulateReal: simulateReal
 }
