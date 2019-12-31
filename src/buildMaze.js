@@ -3,12 +3,11 @@ const dir = require('./directions')
 
 let width, height
 let straightness = 0.5
-let ratioWeak = 0.5
 
-function buildMaze(w, h) {
+function buildMaze(w, h, ratioWeak) {
 	width = w
 	height = h
-	return setWalls(convertMaze(createMaze()))
+	return setWalls(convertMaze(createMaze()), ratioWeak)
 }
 
 function untouched(mazePoint) {
@@ -127,7 +126,7 @@ function convertMaze(maze) {
 	return map
 }
 
-function setWalls(map) {
+function setWalls(map, ratioWeak) {
 	mapCopy = JSON.parse(JSON.stringify(map)) // No need to do this. Should be removed.
 	for (i = 0; i < height * 2 + 1; i++) {
 		for (j = 0; j < width * 2 + 1; j++) {

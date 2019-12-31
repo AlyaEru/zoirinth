@@ -4,6 +4,8 @@ const buildMaze = require('./buildMaze')
 const playerSystem = require('./player')
 const zoidSystem = require('./zoid')
 
+let takenPoints = []
+
 function createMap(width, height, level) {
 	let map = {
 		width: width,
@@ -12,10 +14,12 @@ function createMap(width, height, level) {
 		entities: {},
 		actors: [],
 		clovers: level + 4,
-		zoids: 1
+		zoids: level + 2
 	}
 
-	map.maze = buildMaze.build(width, height)
+	map.maze = buildMaze.build(width, height, 1 - (level - (1 % 5)) / 4)
+
+	takenPoints = []
 
 	map.simulate = () => {
 		return simulate(map)
@@ -81,15 +85,15 @@ function createClovers(map, numClovers) {
 }
 
 function generateExit(map) {
-	let num = util.rand(map.width * 2 + map.height * 2)
+	let num = util.randInt(map.width * 2 + map.height * 2)
 	if (num < map.width) {
 		map.maze[0][num * 2 + 1] = 'lr_portal'
 	} else if (num < map.width * 2) {
-		map.maze[map.height - 1][(num - map.width) * 2 + 1] = 'lr_portal'
+		map.maze[map.height * 2][(num - map.width) * 2 + 1] = 'lr_portal'
 	} else if (num < map.width * 2 + map.height) {
 		map.maze[(num - 2 * map.width) * 2 + 1][0] = 'ud_portal'
 	} else {
-		map.maze[(num - 2 * map.width - map.height) * 2 + 1][map.width - 1] =
+		map.maze[(num - 2 * map.width - map.height) * 2 + 1][map.width * 2] =
 			'ud_portal'
 	}
 }
@@ -208,7 +212,6 @@ function itemAt(map, loc) {
 }
 
 function randSpawnPoint(map) {
-	let takenPoints = []
 	while (true) {
 		point = {
 			x: util.randInt(map.width) * 2 + 1,
