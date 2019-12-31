@@ -1,7 +1,9 @@
 const mapSystem = require('./map')
 const renderMap = require('./renderMap')
+const playerSystem = require('./player')
 
 async function manageGame(width, height) {
+	console.log('hi')
 	let level = 0
 	let died = false
 	while (!died) {
@@ -15,7 +17,7 @@ async function manageGame(width, height) {
 async function manageLevel(level, width, height) {
 	let map = mapSystem.createMap(width, height, level)
 	renderMap.launch(map.maze)
-	let player = map.getPlayer()
+	let player = playerSystem.getPlayer()
 	await levelLoop(map, player)
 	return player.dead
 }
@@ -23,16 +25,23 @@ async function manageLevel(level, width, height) {
 async function levelLoop(map, player) {
 	const clockSpeed = 20
 
+	let zoidIndex = 0
 	while (!player.escaped && !player.dead) {
-		for (let entity of map.entities) {
-			await doNextAction(entity)
+		for (let actor of map.actors) {
+			if (Array.isArray(actor)) {
+				await doNextAction(actor[zoidIndex])
+				zoidIndex++
+				zoidIndex %= actor.length
+			} else {
+				await doNextAction(actor)
+			}
 		}
 
 		if (player.clovers == map.clovers) {
 			map.generateExit()
 		}
 
-		renderMap.render(map.maze)
+		renderMap.render(map.simulate())
 
 		await wait(clockSpeed)
 	}
@@ -44,10 +53,11 @@ async function wait(ms) {
 	})
 }
 
-async function doNextAction(entity) {
-	if (entity.actionQueue.length > 0) {
-		action = entity.actionQueue[0]
-		entity.actionQueue = entity.actionQueue.slice(1)
+async function doNextAction(actor) {
+	// TODO: if there's more than one actor, shuffle through
+	if (actor.actionQueue.length > 0) {
+		action = actor.actionQueue[0]
+		actor.actionQueue = actor.actionQueue.slice(1)
 		await action()
 	}
 }

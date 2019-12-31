@@ -12,7 +12,7 @@ function create(map) {
 		dir: ''
 	}
 
-	zoid.mode = util.randElem(zoidModes)
+	;(zoid.type = 'zoid'), (zoid.mode = util.randElem(zoidModes))
 
 	zoid.getType = () => {
 		return 'zoid'

@@ -12,7 +12,8 @@ function createPlayer(map) {
 		shield: false,
 		dead: false,
 		escaped: false,
-		clovers: 0
+		clovers: 0,
+		type: 'player'
 	}
 
 	player.getType = () => {
@@ -38,16 +39,20 @@ function createPlayer(map) {
 
 function playerEvent(map, event) {
 	switch (event.code) {
-		case ('ArrowDown', 'KeyS'):
+		case 'ArrowDown':
+		case 'KeyS':
 			player.actionQueue.push(() => map.moveEntity(player, 'd'))
 			break
-		case ('ArrowUp', 'KeyW'):
+		case 'ArrowUp':
+		case 'KeyW':
 			player.actionQueue.push(() => map.moveEntity(player, 'u'))
 			break
-		case ('ArrowLeft', 'KeyA'):
+		case 'ArrowLeft':
+		case 'KeyA':
 			player.actionQueue.push(() => map.moveEntity(player, 'l'))
 			break
-		case ('ArrowRight', 'KeyD'):
+		case 'ArrowRight':
+		case 'KeyD':
 			player.actionQueue.push(() => map.moveEntity(player, 'r'))
 			break
 		case 'KeyR':

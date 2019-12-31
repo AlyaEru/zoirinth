@@ -10,40 +10,43 @@ function createMap(width, height, level) {
 		height: height,
 		level: level,
 		entities: [],
+		actors: [],
 		clovers: level + 4,
 		zoids: 1
 	}
 
 	map.maze = buildMaze.build(width, height)
 
+	map.simulate = () => {
+		return simulate(map)
+	}
+
 	map.moveEntity = (entity, direction) => {
 		moveEntity(map, entity, direction)
 	}
 
-	map.removeEntity = item => {
-		removeEntity(map, item)
-	}
-
-	map.spawnEntity = entity => {
-		spawnEntity(map, entity)
-	}
-
-	map.getPlayer = () => {
-		return getPlayer(map.entities)
+	map.removeClover = item => {
+		removeClover(map, item)
 	}
 
 	map.generateExit = () => {
 		generateExit(map)
 	}
 
-	createEntities(map)
-	console.log(map)
+	map.spawnEntity = entity => {
+		spawnEntity(map, entity)
+	}
+
+	createEntitiesAndActors(map)
 
 	return map
 }
 
-function createEntities(map) {
-	playerSystem.createPlayer(map)
+function createEntitiesAndActors(map) {
+	let player = playerSystem.createPlayer(map)
+	map.entities.players = [player]
+	map.actors.push(player)
+
 	createZoids(map, map.zoids)
 	createClovers(map, map.clovers)
 }
@@ -54,6 +57,8 @@ function createZoids(map, numZoids) {
 	for (let i = 0; i < numZoids; i++) {
 		zoids.push(zoidSystem.create(map))
 	}
+	map.entities.zoids = zoids
+	map.actors.push(zoids)
 	return zoids
 }
 
@@ -63,11 +68,12 @@ function createClovers(map, numClovers) {
 	for (let i = 0; i < numClovers; i++) {
 		clovers.push({
 			loc: randSpawnPoint(map),
-			getType: () => 'clover'
+			getType: () => 'clover',
+			type: 'clover'
 		})
 	}
 
-	map.entities.concat(clovers)
+	map.entities.clovers = clovers
 }
 
 function generateExit(map) {
@@ -84,6 +90,16 @@ function generateExit(map) {
 	}
 }
 
+function simulate(map) {
+	mapCopy = JSON.parse(JSON.stringify(map.maze)) //deep clone map
+	for (let entity of Object.values(map.entities)) {
+		for (let i = 0; i < entity.length; i++) {
+			mapCopy[entity[i].loc.y][entity[i].loc.x] = entity[i].type
+		}
+	}
+	return mapCopy
+}
+
 function moveEntity(map, entity, dir) {
 	let runthrough = {
 		clover: true,
@@ -97,10 +113,10 @@ function moveEntity(map, entity, dir) {
 	}
 
 	if (entity.runMode) {
-		if (handleEntityMove(map, entity, locAt(entity.loc, dir))) {
-			let forward = lookNext(entity, dir)
-			let left = lookNext(entity, dirs.rotateLeft(dir))
-			let right = lookNext(entity, dirs.rotateRight(dir))
+		if (handleEntityMove(map, entity, dirs.locAt(entity.loc, dir))) {
+			let forward = lookNext(map, entity, dir)
+			let left = lookNext(map, entity, dirs.rotateLeft(dir))
+			let right = lookNext(map, entity, dirs.rotateRight(dir))
 			if (runthrough[forward] && !runthrough[left] && !runthrough[right]) {
 				entity.actionQueue.unshift(() => {
 					map.moveEntity(entity, dir)
@@ -108,19 +124,19 @@ function moveEntity(map, entity, dir) {
 			}
 		}
 	} else {
-		handleEntityMove(map, entity, locAt(entity.loc, dir))
+		handleEntityMove(map, entity, dirs.locAt(entity.loc, dir))
 	}
 }
 
 function handleEntityMove(map, entity, loc) {
-	if (entity.getType() == 'player') {
+	if (entity.type === 'player') {
 		let player = entity // Renamed for clarity
 		switch (itemAt(map, loc)) {
 			case 'space':
 				player.loc = loc
 				return true
 			case 'clover':
-				removeEntity(map, loc)
+				removeClover(map, loc)
 				player.score += 100
 				player.clovers++
 				player.loc = loc
@@ -150,30 +166,34 @@ function handleEntityMove(map, entity, loc) {
 	return false
 }
 
+function spawnEntity(map, entity) {
+	let spawnPoint = randSpawnPoint(map)
+	entity.loc = spawnPoint
+}
+
 function lookNext(map, entity, dir) {
 	return itemAt(map, dirs.locAt(entity.loc, dir))
 }
 
 function itemAt(map, loc) {
-	if (loc.x < 0 || loc.x > map.width || loc.y < 0 || loc.y > map.height) {
+	if (
+		loc.x < 0 ||
+		loc.x > map.width * 2 + 1 ||
+		loc.y < 0 ||
+		loc.y > map.height * 2 + 1
+	) {
 		return 'outside'
 	} else {
-		return map[loc.y][loc.x]
+		return map.simulate()[loc.y][loc.x]
 	}
-}
-
-function spawnEntity(map, entity) {
-	let spawnPoint = randSpawnPoint(map)
-	entity.loc = spawnPoint
-	map.entities.push(entity)
 }
 
 function randSpawnPoint(map) {
 	let takenPoints = []
 	while (true) {
 		point = {
-			x: util.randInt(map.width),
-			y: util.randInt(map.height)
+			x: util.randInt(map.width) * 2 + 1,
+			y: util.randInt(map.height) * 2 + 1
 		}
 		let match = false
 		for (takenPoint of takenPoints) {
@@ -188,10 +208,21 @@ function randSpawnPoint(map) {
 	}
 }
 
-function removeEntity(map, loc) {
-	for (let i = 0; i < map.entities.length; i++) {
+/*function removeEntity(map, loc) {
+	for (let i = 0; i < Object.values(map.entities).length; i++) {
 		if (map.entities[i].loc.x == loc.x && map.entities[i].loc.y == loc.y) {
 			map.entities.splice(i, 1)
+		}
+	}
+}*/
+
+function removeClover(map, loc) {
+	for (let i = 0; i < map.entities.clovers.length; i++) {
+		if (
+			map.entities.clovers[i].loc.x == loc.x &&
+			map.entities.clovers[i].loc.y == loc.y
+		) {
+			map.entities.clovers.splice(i, 1)
 		}
 	}
 }
@@ -203,5 +234,6 @@ function getPlayer(entities) {
 }
 
 module.exports = {
-	createMap: createMap
+	createMap: createMap,
+	simulate: simulate
 }
