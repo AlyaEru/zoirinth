@@ -1,11 +1,10 @@
+// Load jQuery globally
+window.$ = window.jQuery = require('jquery')
 
-$( document ).ready(function() {
-	
-	
-	
-	const gameboardWidth = 24
-	const gameboardHeight = 15
-	
-	//playLevel(1,10,gameboardWidth,gameboardHeight)
-	manageGame(gameboardWidth,gameboardHeight)
-});
+// Start game
+const gameplay = require('./gameplay')
+
+const gameboardWidth = 18
+const gameboardHeight = 12
+
+gameplay.manageGame(gameboardWidth, gameboardHeight)
