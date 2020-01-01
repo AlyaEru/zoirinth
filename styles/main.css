@@ -63,7 +63,7 @@ table#gameboard tr{
 	border-spacing:0;
 	border:none;
 	padding:0;
-	line-height:16px;
+	line-height:20px;
 }
 table#gameboard tr td, span.hovertext {
 	font-weight:normal;
@@ -138,8 +138,8 @@ table#gameboard tr td:hover::before, span.hovertext:hover::before {color:#ff860d
 .explode8::after {color:#ff602a;content: "░"; animation: explode2 .3s step-start infinite;}
 .explode9::after {color:#ff602a;content: "░"; animation: explode3 .3s step-start infinite;}
 
-.bullet_u::after {color:yellow;content: "🡑";}
-.bullet_d::after {color:yellow;content: "🡓";}
+.bullet_u::after {color:yellow;content: "↑";}
+.bullet_d::after {color:yellow;content: "↓";}
 .bullet_l::after {color:yellow;content: "←";}
 .bullet_r::after {color:yellow;content: "→";}
 
