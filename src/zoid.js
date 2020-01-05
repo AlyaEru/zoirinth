@@ -14,6 +14,7 @@ function create(map) {
 
 	zoid.type = 'zoid'
 	zoid.mode = util.randElem(zoidModes)
+	zoid.clovers = 0
 
 	zoid.getClass = () => {
 		return 'zoid'

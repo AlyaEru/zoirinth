@@ -3,15 +3,29 @@ const dirs = require('./directions')
 const buildMaze = require('./buildMaze')
 const playerSystem = require('./player')
 const zoidSystem = require('./zoid')
+const renderMap = require('./renderMap')
 
 let takenPoints = []
+
+function isShootableWall(map, loc) {
+	type = itemAt(map, loc)
+	return (
+		type.substring(type.length - 5) === '_weak' &&
+		loc.y > 0 &&
+		loc.y < map.maze.length - 1 &&
+		loc.x > 0 &&
+		loc.x < map.maze[0].length - 1
+	)
+}
 
 function createMap(width, height, level) {
 	let map = {
 		width: width,
 		height: height,
 		level: level,
-		entities: {},
+		entities: {
+			zaps: []
+		},
 		actors: [],
 		clovers: level + 4,
 		zoids: level + 2
@@ -33,8 +47,12 @@ function createMap(width, height, level) {
 		moveEntity(map, entity, direction)
 	}
 
-	map.removeClover = item => {
-		removeClover(map, item)
+	map.removeEntity = item => {
+		removeEntity(map, entityType, item)
+	}
+
+	map.shoot = async function(entity, dir) {
+		await shoot(map, entity, dir)
 	}
 
 	map.generateExit = () => {
@@ -118,6 +136,30 @@ function simulateReal(map) {
 	return mapCopy
 }
 
+async function shoot(map, entity, dir) {
+	let shootDelay = 50
+	let zap = {
+		loc: {x: entity.loc.x, y: entity.loc.y},
+		getClass: () => 'bullet_' + dir,
+		type: 'bullet',
+		dir: dir,
+		hello: 'world'
+	}
+	let zaps = new Array(zap)
+	map.entities.zaps = zaps
+	while (true) {
+		let keepMoving = handleEntityMove(map, zap, dirs.locAt(zap.loc, dir))
+		if (!keepMoving) {
+			removeEntity(map, 'zaps', zap.loc)
+		}
+		renderMap.render(simulateReal(map))
+		if (!keepMoving) {
+			break
+		}
+		await util.wait(shootDelay)
+	}
+}
+
 function moveEntity(map, entity, dir) {
 	let runthrough = {
 		clover: true,
@@ -154,7 +196,7 @@ function handleEntityMove(map, entity, loc) {
 				player.loc = loc
 				return true
 			case 'clover':
-				removeClover(map, loc)
+				removeEntity(map, 'clovers', loc)
 				player.score += 100
 				player.clovers++
 				player.loc = loc
@@ -177,15 +219,43 @@ function handleEntityMove(map, entity, loc) {
 				return true
 			case 'clover':
 				zoid.clovers++
-				removeClover(map, loc)
+				removeEntity(map, 'clovers', loc)
 				zoid.loc = loc
 				return true
 			case 'player':
 				playerSystem.getPlayer().dead = true
 				return true
 		}
+	} else if (entity.type === 'bullet') {
+		switch (itemAt(map, loc)) {
+			case 'space':
+				entity.loc = loc
+				return true
+			case 'clover':
+				removeEntity(map, 'clovers', loc)
+				map.entities.players[0].clovers++
+				break
+			case 'player':
+				player.dead = true
+				break
+			case 'zoid':
+				zoid = map.entities.zoids.filter(
+					zoid => zoid.loc.x === loc.x && zoid.loc.y === loc.y
+				)[0]
+				if (zoid.clovers > 0) {
+					zoid.clovers-- //TODO: make more complex
+					map.entities.players[0].clovers++
+				} else {
+					removeEntity(map, 'zoids', zoid.loc)
+				}
+				break
+			default:
+				if (isShootableWall(map, loc)) {
+					map.maze[loc.y][loc.x] = 'space'
+				}
+				console.log(itemAt(map, loc))
+		}
 	}
-
 	return false
 }
 
@@ -238,13 +308,13 @@ function randSpawnPoint(map) {
 	}
 }*/
 
-function removeClover(map, loc) {
-	for (let i = 0; i < map.entities.clovers.length; i++) {
+function removeEntity(map, entityType, loc) {
+	for (let i = 0; i < map.entities[entityType].length; i++) {
 		if (
-			map.entities.clovers[i].loc.x == loc.x &&
-			map.entities.clovers[i].loc.y == loc.y
+			map.entities[entityType][i].loc.x == loc.x &&
+			map.entities[entityType][i].loc.y == loc.y
 		) {
-			map.entities.clovers.splice(i, 1)
+			map.entities[entityType].splice(i, 1)
 		}
 	}
 }

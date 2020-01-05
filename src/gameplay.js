@@ -1,6 +1,7 @@
 const mapSystem = require('./map')
 const renderMap = require('./renderMap')
 const playerSystem = require('./player')
+const util = require('./utilities')
 
 async function manageGame(width, height) {
 	let level = 0
@@ -22,37 +23,33 @@ async function manageLevel(level, width, height) {
 }
 
 async function levelLoop(map, player) {
-	const clockSpeed = 20
+	const clockSpeed = 30
 
 	let zoidIndex = 0
 	while (!player.escaped && !player.dead) {
-		for (let actor of map.actors) {
-			if (Array.isArray(actor)) {
-				if (actor.length > 0) {
-					zoidIndex %= actor.length
-					await doNextAction(actor[zoidIndex])
-					zoidIndex++
+		if (!player.menu) {
+			for (let actor of map.actors) {
+				if (Array.isArray(actor)) {
+					if (actor.length > 0) {
+						zoidIndex %= actor.length
+						await doNextAction(actor[zoidIndex])
+						zoidIndex++
+					}
+				} else {
+					await doNextAction(actor)
 				}
-			} else {
-				await doNextAction(actor)
 			}
+
+			if (player.clovers === map.clovers) {
+				map.generateExit()
+				player.clovers = 0
+			}
+
+			renderMap.render(map.simulateReal())
 		}
 
-		if (player.clovers === map.clovers) {
-			map.generateExit()
-			player.clovers = 0
-		}
-
-		renderMap.render(map.simulateReal())
-
-		await wait(clockSpeed)
+		await util.wait(clockSpeed)
 	}
-}
-
-async function wait(ms) {
-	return new Promise(resolve => {
-		setTimeout(resolve, ms)
-	})
 }
 
 async function doNextAction(actor) {

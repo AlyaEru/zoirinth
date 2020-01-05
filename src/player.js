@@ -13,7 +13,8 @@ function createPlayer(map) {
 		dead: false,
 		escaped: false,
 		clovers: 0,
-		type: 'player'
+		type: 'player',
+		menu: false
 	}
 
 	player.getClass = () => {
@@ -41,22 +42,53 @@ function playerEvent(map, event) {
 	switch (event.code) {
 		case 'ArrowDown':
 		case 'KeyS':
-			player.actionQueue.push(() => map.moveEntity(player, 'd'))
+			if (player.menu) {
+				player.actionQueue.push(async function() {
+					await map.shoot(player, 'd')
+				})
+				player.menu = false
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'd'))
+			}
 			break
 		case 'ArrowUp':
 		case 'KeyW':
-			player.actionQueue.push(() => map.moveEntity(player, 'u'))
+			if (player.menu) {
+				player.actionQueue.push(async function() {
+					await map.shoot(player, 'u')
+				})
+				player.menu = false
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'u'))
+			}
 			break
 		case 'ArrowLeft':
 		case 'KeyA':
-			player.actionQueue.push(() => map.moveEntity(player, 'l'))
+			if (player.menu) {
+				player.actionQueue.push(async function() {
+					await map.shoot(player, 'l')
+				})
+				player.menu = false
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'l'))
+			}
 			break
 		case 'ArrowRight':
 		case 'KeyD':
-			player.actionQueue.push(() => map.moveEntity(player, 'r'))
+			if (player.menu) {
+				player.actionQueue.push(async function() {
+					await map.shoot(player, 'r')
+				})
+				player.menu = false
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'r'))
+			}
 			break
 		case 'KeyR':
 			player.runMode = !player.runMode
+			break
+		case 'Enter':
+			player.menu = !player.menu
 			break
 		default:
 		// Do nothing
