@@ -197,6 +197,11 @@ function handleEntityMove(map, entity, loc) {
 			case 'space':
 				player.loc = loc
 				return true
+			case 'pod':
+				player.score += 1
+				map.maze[loc.y][loc.x] = 'space'
+				player.loc = loc
+				return true
 			case 'clover':
 				removeEntity(map, 'clovers', loc)
 				player.score += 100
@@ -217,6 +222,8 @@ function handleEntityMove(map, entity, loc) {
 		let zoid = entity // Renamed for clarity
 		switch (itemAt(map, loc)) {
 			case 'space':
+			case 'pod':
+				map.maze[loc.y][loc.x] = 'pod'
 				zoid.loc = loc
 				return true
 			case 'clover':
@@ -229,9 +236,14 @@ function handleEntityMove(map, entity, loc) {
 				return true
 		}
 	} else if (entity.type === 'bullet') {
+		let zap = entity // Renamed for clarity
 		switch (itemAt(map, loc)) {
 			case 'space':
-				entity.loc = loc
+				zap.loc = loc
+				return true
+			case 'pod':
+				map.maze[loc.y][loc.x] = 'space'
+				zap.loc = loc
 				return true
 			case 'clover':
 				removeEntity(map, 'clovers', loc)
