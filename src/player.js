@@ -39,7 +39,7 @@ function createPlayer(map) {
 }
 
 // returns false if there aren't enough points to spend
-function spendPoints(player, points) {
+function spendPoints(points) {
 	if (player.score >= points) {
 		player.score -= points
 		return true
@@ -47,59 +47,36 @@ function spendPoints(player, points) {
 	return false
 }
 
+function playerShoot(map, dir) {
+	if (player.menu) {
+		if (spendPoints(10)) {
+			player.actionQueue.push(async function() {
+				await map.shoot(player, dir)
+			})
+			player.menu = false
+		}
+	} else {
+		player.actionQueue.push(() => map.moveEntity(player, dir))
+	}
+}
+
 function playerEvent(map, event) {
 	switch (event.code) {
 		case 'ArrowDown':
 		case 'KeyS':
-			if (player.menu) {
-				if (spendPoints(player, 10)) {
-					player.actionQueue.push(async function() {
-						await map.shoot(player, 'd')
-					})
-					player.menu = false
-				}
-			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'd'))
-			}
+			playerShoot(map, 'd')
 			break
 		case 'ArrowUp':
 		case 'KeyW':
-			if (player.menu) {
-				if (spendPoints(player, 10)) {
-					player.actionQueue.push(async function() {
-						await map.shoot(player, 'u')
-					})
-					player.menu = false
-				}
-			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'u'))
-			}
+			playerShoot(map, 'u')
 			break
 		case 'ArrowLeft':
 		case 'KeyA':
-			if (player.menu) {
-				if (spendPoints(player, 10)) {
-					player.actionQueue.push(async function() {
-						await map.shoot(player, 'l')
-					})
-					player.menu = false
-				}
-			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'l'))
-			}
+			playerShoot(map, 'l')
 			break
 		case 'ArrowRight':
 		case 'KeyD':
-			if (player.menu) {
-				if (spendPoints(player, 10)) {
-					player.actionQueue.push(async function() {
-						await map.shoot(player, 'r')
-					})
-					player.menu = false
-				}
-			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'r'))
-			}
+			playerShoot(map, 'r')
 			break
 		case 'KeyR':
 			player.runMode = !player.runMode
