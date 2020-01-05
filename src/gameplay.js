@@ -16,18 +16,18 @@ async function manageGame(width, height) {
 
 async function manageLevel(level, width, height) {
 	let map = mapSystem.createMap(width, height, level)
-	renderMap.launch(map.maze)
+	renderMap.launch(map.simulateReal())
 	let player = playerSystem.getPlayer()
-	await levelLoop(map, player)
+	await levelLoop(map, player, level)
 	return player.dead
 }
 
-async function levelLoop(map, player) {
+async function levelLoop(map, player, level) {
 	const clockSpeed = 30
 
 	let zoidIndex = 0
 	while (!player.escaped && !player.dead) {
-		if (!player.menu) {
+		if (!player.menu && !player.awaitBegin) {
 			for (let actor of map.actors) {
 				if (Array.isArray(actor)) {
 					if (actor.length > 0) {
@@ -47,6 +47,7 @@ async function levelLoop(map, player) {
 
 			renderMap.render(map.simulateReal())
 			renderMap.renderScore(player.score)
+			renderMap.renderLevel(level)
 		}
 
 		await util.wait(clockSpeed)

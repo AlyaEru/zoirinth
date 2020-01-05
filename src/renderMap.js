@@ -100,7 +100,11 @@ function renderBulletExplosion(x, y, explodeTime) {
 }
 
 function renderScore(score) {
-	$('#points').html('Points: ' + score)
+	$('#points').text('Points: ' + score)
+}
+
+function renderLevel(level) {
+	$('#level').text('Level: ' + level)
 }
 
 /**
@@ -122,5 +126,6 @@ module.exports = {
 	launch: launchGameboard,
 	render: renderGameboard,
 	renderBulletExplosion: renderBulletExplosion,
-	renderScore: renderScore
+	renderScore: renderScore,
+	renderLevel: renderLevel
 }

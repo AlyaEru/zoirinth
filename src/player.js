@@ -14,7 +14,8 @@ function createPlayer(map) {
 		escaped: false,
 		clovers: 0,
 		type: 'player',
-		menu: false
+		menu: false,
+		awaitBegin: true
 	}
 
 	player.getClass = () => {
@@ -61,6 +62,7 @@ function playerShoot(map, dir) {
 }
 
 function playerEvent(map, event) {
+	player.awaitBegin = false
 	switch (event.code) {
 		case 'ArrowDown':
 		case 'KeyS':
