@@ -148,8 +148,10 @@ async function shoot(map, entity, dir) {
 	let zaps = new Array(zap)
 	map.entities.zaps = zaps
 	while (true) {
-		let keepMoving = handleEntityMove(map, zap, dirs.locAt(zap.loc, dir))
+		let nextSpot = dirs.locAt(zap.loc, dir)
+		let keepMoving = handleEntityMove(map, zap, nextSpot)
 		if (!keepMoving) {
+			renderMap.renderBulletExplosion(nextSpot.x, nextSpot.y, 200)
 			removeEntity(map, 'zaps', zap.loc)
 		}
 		renderMap.render(simulateReal(map))

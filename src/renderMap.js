@@ -116,5 +116,6 @@ function shuffle(a) {
 
 module.exports = {
 	launch: launchGameboard,
-	render: renderGameboard
+	render: renderGameboard,
+	renderBulletExplosion: renderBulletExplosion
 }
