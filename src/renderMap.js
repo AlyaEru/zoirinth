@@ -99,6 +99,10 @@ function renderBulletExplosion(x, y, explodeTime) {
 	}, explodeTime)
 }
 
+function renderScore(score) {
+	$('#points').html('Points: ' + score)
+}
+
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.
@@ -117,5 +121,6 @@ function shuffle(a) {
 module.exports = {
 	launch: launchGameboard,
 	render: renderGameboard,
-	renderBulletExplosion: renderBulletExplosion
+	renderBulletExplosion: renderBulletExplosion,
+	renderScore: renderScore
 }

@@ -46,6 +46,7 @@ async function levelLoop(map, player) {
 			}
 
 			renderMap.render(map.simulateReal())
+			renderMap.renderScore(player.score)
 		}
 
 		await util.wait(clockSpeed)

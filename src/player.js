@@ -38,15 +38,26 @@ function createPlayer(map) {
 	return player
 }
 
+// returns false if there aren't enough points to spend
+function spendPoints(player, points) {
+	if (player.score >= points) {
+		player.score -= points
+		return true
+	}
+	return false
+}
+
 function playerEvent(map, event) {
 	switch (event.code) {
 		case 'ArrowDown':
 		case 'KeyS':
 			if (player.menu) {
-				player.actionQueue.push(async function() {
-					await map.shoot(player, 'd')
-				})
-				player.menu = false
+				if (spendPoints(player, 10)) {
+					player.actionQueue.push(async function() {
+						await map.shoot(player, 'd')
+					})
+					player.menu = false
+				}
 			} else {
 				player.actionQueue.push(() => map.moveEntity(player, 'd'))
 			}
@@ -54,10 +65,12 @@ function playerEvent(map, event) {
 		case 'ArrowUp':
 		case 'KeyW':
 			if (player.menu) {
-				player.actionQueue.push(async function() {
-					await map.shoot(player, 'u')
-				})
-				player.menu = false
+				if (spendPoints(player, 10)) {
+					player.actionQueue.push(async function() {
+						await map.shoot(player, 'u')
+					})
+					player.menu = false
+				}
 			} else {
 				player.actionQueue.push(() => map.moveEntity(player, 'u'))
 			}
@@ -65,10 +78,12 @@ function playerEvent(map, event) {
 		case 'ArrowLeft':
 		case 'KeyA':
 			if (player.menu) {
-				player.actionQueue.push(async function() {
-					await map.shoot(player, 'l')
-				})
-				player.menu = false
+				if (spendPoints(player, 10)) {
+					player.actionQueue.push(async function() {
+						await map.shoot(player, 'l')
+					})
+					player.menu = false
+				}
 			} else {
 				player.actionQueue.push(() => map.moveEntity(player, 'l'))
 			}
@@ -76,10 +91,12 @@ function playerEvent(map, event) {
 		case 'ArrowRight':
 		case 'KeyD':
 			if (player.menu) {
-				player.actionQueue.push(async function() {
-					await map.shoot(player, 'r')
-				})
-				player.menu = false
+				if (spendPoints(player, 10)) {
+					player.actionQueue.push(async function() {
+						await map.shoot(player, 'r')
+					})
+					player.menu = false
+				}
 			} else {
 				player.actionQueue.push(() => map.moveEntity(player, 'r'))
 			}
