@@ -190,6 +190,13 @@ function moveEntity(map, entity, dir) {
 	}
 }
 
+function zoidDrop() {
+	//is this affected by the level, number of points?
+	//is affected by zoid's number of clovers
+	return 'pod'
+	//other options: mine, superpod, clover, zoidrone
+}
+
 function handleEntityMove(map, entity, loc) {
 	if (entity.type === 'player') {
 		let player = entity // Renamed for clarity
@@ -223,7 +230,7 @@ function handleEntityMove(map, entity, loc) {
 		switch (itemAt(map, loc)) {
 			case 'space':
 			case 'pod':
-				map.maze[loc.y][loc.x] = 'pod'
+				map.maze[loc.y][loc.x] = zoidDrop()
 				zoid.loc = loc
 				return true
 			case 'clover':
@@ -250,7 +257,7 @@ function handleEntityMove(map, entity, loc) {
 				map.entities.players[0].clovers++
 				break
 			case 'player':
-				player.dead = true
+				playerSystem.getPlayer().dead = true
 				break
 			case 'zoid':
 				zoid = map.entities.zoids.filter(

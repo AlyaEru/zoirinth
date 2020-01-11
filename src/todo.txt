@@ -1,0 +1,38 @@
+add randomness
+- maze windyness
+- chance of destroying wall
+- chance of killing clover in zoid
+- random wait before portal spawn
+- randomly spawn superpods
+
+bug: points resetting to 10 when entering next level
+
+zoidrones
+- I'm thinking, be a zoid, but instead of moving each turn has a chance of becoming zoid? 
+	this would slow down zoids if there are zoidrones.
+- Maybe, a separate entity that also has a spot in the actor cycle. So if there are more zoidrones they take longer to become zoids, but they don't affect zoid speed.
+
+mines
+- random spawn
+- destroying stuff
+- random blow up
+- setting them off (shooting, running into them)
+
+more complex zoid AI
+- zoids shooting
+- preferring unexplored territory
+- track left, track right?
+- chasing the player
+- shooting to escape being trapped
+
+shield mode
+
+hyperspace (random teleport)
+
+big explode
+
+invisible mode
+
+traps
+
+black holes

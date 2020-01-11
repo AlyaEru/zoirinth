@@ -1,7 +1,8 @@
 const util = require('./utilities')
 const dirs = require('./directions')
+const playerSystem = require('./player')
 
-const zoidModes = ['random']
+const zoidModes = ['random', 'agressive']
 
 // Returns a new zoid
 function create(map) {
@@ -36,7 +37,25 @@ function addAction(map, zoid) {
 					map.moveEntity(zoid, util.randElem(dirs.dirs))
 				)
 				break
+			case 'agressive':
+				let player = playerSystem.getPlayer()
+				let shootDir = false
+				if (zoid.loc.x === player.loc.x) {
+					shootDir = zoid.loc.y > player.loc.y ? 'u' : 'd'
+				} else if (zoid.loc.y === player.loc.y) {
+					shootDir = zoid.loc.x > player.loc.x ? 'l' : 'r'
+				}
+				if (shootDir) {
+					zoid.actionQueue.push(async function() {
+						await map.shoot(zoid, shootDir)
+					})
+				} else {
+					zoid.actionQueue.unshift(() =>
+						map.moveEntity(zoid, util.randElem(dirs.dirs))
+					)
+				}
 		}
+		//change zoid mode?
 		zoid.actionQueue.push(addAction(map, zoid))
 	}
 }
