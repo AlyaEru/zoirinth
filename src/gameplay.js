@@ -3,6 +3,8 @@ const renderMap = require('./renderMap')
 const playerSystem = require('./player')
 const util = require('./utilities')
 
+const shieldPointProb = 0.1
+
 async function manageGame(width, height) {
 	let level = 0
 	let died = false
@@ -39,7 +41,11 @@ async function levelLoop(map, player, level) {
 					await doNextAction(actor)
 				}
 			}
-
+			if (player.shield) {
+				if (Math.random() < shieldPointProb && !playerSystem.spendPoints(1)) {
+					player.shield = false
+				}
+			}
 			if (player.clovers === map.clovers) {
 				map.generateExit()
 				player.clovers = 0
@@ -48,6 +54,7 @@ async function levelLoop(map, player, level) {
 			renderMap.render(map.simulateReal())
 			renderMap.renderScore(player.score)
 			renderMap.renderLevel(level)
+			renderMap.renderPlayerInfo(player)
 		}
 
 		await util.wait(clockSpeed)

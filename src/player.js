@@ -49,15 +49,11 @@ function spendPoints(points) {
 }
 
 function playerShoot(map, dir) {
-	if (player.menu) {
-		if (spendPoints(10)) {
-			player.actionQueue.push(async function() {
-				await map.shoot(player, dir)
-			})
-			player.menu = false
-		}
-	} else {
-		player.actionQueue.push(() => map.moveEntity(player, dir))
+	if (spendPoints(10)) {
+		player.actionQueue.push(async function() {
+			await map.shoot(player, dir)
+		})
+		player.menu = false
 	}
 }
 
@@ -66,22 +62,41 @@ function playerEvent(map, event) {
 	switch (event.code) {
 		case 'ArrowDown':
 		case 'KeyS':
-			playerShoot(map, 'd')
+			if (player.menu) {
+				playerShoot(map, 'd')
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'd'))
+			}
 			break
 		case 'ArrowUp':
 		case 'KeyW':
-			playerShoot(map, 'u')
+			if (player.menu) {
+				playerShoot(map, 'u')
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'u'))
+			}
 			break
 		case 'ArrowLeft':
 		case 'KeyA':
-			playerShoot(map, 'l')
+			if (player.menu) {
+				playerShoot(map, 'l')
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'l'))
+			}
 			break
 		case 'ArrowRight':
 		case 'KeyD':
-			playerShoot(map, 'r')
+			if (player.menu) {
+				playerShoot(map, 'r')
+			} else {
+				player.actionQueue.push(() => map.moveEntity(player, 'r'))
+			}
 			break
 		case 'KeyR':
 			player.runMode = !player.runMode
+			break
+		case 'KeyQ':
+			player.shield = !player.shield
 			break
 		case 'Enter':
 			player.menu = !player.menu
@@ -92,6 +107,7 @@ function playerEvent(map, event) {
 }
 
 module.exports = {
-	createPlayer: createPlayer,
-	getPlayer: getPlayer
+	createPlayer,
+	getPlayer,
+	spendPoints
 }

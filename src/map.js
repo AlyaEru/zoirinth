@@ -257,7 +257,9 @@ function handleEntityMove(map, entity, loc) {
 				map.entities.players[0].clovers++
 				break
 			case 'player':
-				playerSystem.getPlayer().dead = true
+				if (!playerSystem.getPlayer().shield) {
+					playerSystem.getPlayer().dead = true
+				}
 				break
 			case 'zoid':
 				zoid = map.entities.zoids.filter(
