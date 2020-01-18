@@ -5,6 +5,16 @@ const playerSystem = require('./player')
 const zoidModes = ['random', 'agressive']
 
 // Returns a new zoid
+function createRandom(map) {
+	let zoid = create(map)
+	map.spawnEntity(zoid)
+}
+
+function born(map, loc) {
+	let zoid = create(map)
+	zoid.loc = loc
+}
+
 function create(map) {
 	let zoid = {
 		actionQueue: [],
@@ -22,9 +32,7 @@ function create(map) {
 	}
 
 	zoid.addAction = addAction(map, zoid)
-
-	map.spawnEntity(zoid)
-
+	map.entities.zoids.push(zoid)
 	return zoid
 }
 
@@ -61,5 +69,6 @@ function addAction(map, zoid) {
 }
 
 module.exports = {
-	create: create
+	create: createRandom,
+	born: born
 }

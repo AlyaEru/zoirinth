@@ -3,6 +3,7 @@ const dirs = require('./directions')
 const buildMaze = require('./buildMaze')
 const playerSystem = require('./player')
 const zoidSystem = require('./zoid')
+const zoidroneSystem = require('./zoidrone')
 const renderMap = require('./renderMap')
 
 let takenPoints = []
@@ -18,15 +19,18 @@ function isShootableWall(map, loc) {
 	)
 }
 
-function createMap(width, height, level) {
+function createMap(width, height, gameStats) {
+	let level = gameStats.level
 	let map = {
 		width: width,
 		height: height,
-		level: level,
+		gameStats,
+		gameStats,
 		entities: {
-			zaps: []
+			zaps: [],
+			zoids: [],
+			zoidrones: []
 		},
-		actors: [],
 		clovers: level + 4,
 		zoids: level + 2
 	}
@@ -47,8 +51,8 @@ function createMap(width, height, level) {
 		moveEntity(map, entity, direction)
 	}
 
-	map.removeEntity = item => {
-		removeEntity(map, entityType, item)
+	map.removeEntity = (entityType, loc) => {
+		removeEntity(map, entityType, loc)
 	}
 
 	map.shoot = async function(entity, dir) {
@@ -71,21 +75,15 @@ function createMap(width, height, level) {
 function createEntitiesAndActors(map) {
 	let player = playerSystem.createPlayer(map)
 	map.entities.players = [player]
-	map.actors.push(player)
 
 	createZoids(map, map.zoids)
 	createClovers(map, map.clovers)
 }
 
 function createZoids(map, numZoids) {
-	let zoids = []
-
 	for (let i = 0; i < numZoids; i++) {
-		zoids.push(zoidSystem.create(map))
+		zoidSystem.create(map)
 	}
-	map.entities.zoids = zoids
-	map.actors.push(zoids)
-	return zoids
 }
 
 function createClovers(map, numClovers) {
@@ -171,7 +169,7 @@ function moveEntity(map, entity, dir) {
 		lr_portal: true,
 		ud_portal: true,
 		player: true,
-		player_shield: true
+		zoidrone: true
 	}
 
 	if (entity.runMode) {
@@ -190,10 +188,14 @@ function moveEntity(map, entity, dir) {
 	}
 }
 
-function zoidDrop() {
+function zoidDrop(map, loc) {
 	//is this affected by the level, number of points?
 	//is affected by zoid's number of clovers
-	return 'pod'
+	if (Math.random() < 0.005) {
+		map.entities.zoidrones.push(zoidroneSystem.create(map, loc))
+	} else {
+		map.maze[loc.y][loc.x] = 'pod'
+	}
 	//other options: mine, superpod, clover, zoidrone
 }
 
@@ -218,6 +220,12 @@ function handleEntityMove(map, entity, loc) {
 			case 'zoid':
 				playerSystem.getPlayer().dead = true
 				break
+			case 'zoidrone':
+				removeEntity(map, 'zoidrones', loc)
+				player.score += 10
+				// remove zoidrone
+				player.loc = loc
+				return true
 			case 'lr_portal':
 			case 'ud_portal':
 				player.escaped = true
@@ -230,12 +238,14 @@ function handleEntityMove(map, entity, loc) {
 		switch (itemAt(map, loc)) {
 			case 'space':
 			case 'pod':
-				map.maze[loc.y][loc.x] = zoidDrop()
+				map.maze[loc.y][loc.x] = 'space'
+				zoidDrop(map, loc)
 				zoid.loc = loc
 				return true
 			case 'clover':
 				zoid.clovers++
 				removeEntity(map, 'clovers', loc)
+				zoidDrop(map, loc)
 				zoid.loc = loc
 				return true
 			case 'player':
@@ -322,14 +332,6 @@ function randSpawnPoint(map) {
 		}
 	}
 }
-
-/*function removeEntity(map, loc) {
-	for (let i = 0; i < Object.values(map.entities).length; i++) {
-		if (map.entities[i].loc.x == loc.x && map.entities[i].loc.y == loc.y) {
-			map.entities.splice(i, 1)
-		}
-	}
-}*/
 
 function removeEntity(map, entityType, loc) {
 	for (let i = 0; i < map.entities[entityType].length; i++) {

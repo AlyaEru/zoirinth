@@ -8,7 +8,7 @@ function createPlayer(map) {
 	player = {
 		actionQueue: [],
 		runMode: true,
-		score: 10,
+		score: map.gameStats.score,
 		shield: false,
 		dead: false,
 		escaped: false,

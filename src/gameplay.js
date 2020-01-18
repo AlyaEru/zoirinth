@@ -6,41 +6,58 @@ const util = require('./utilities')
 const shieldPointProb = 0.1
 
 async function manageGame(width, height) {
-	let level = 0
+	const gameStats = {
+		level: 0,
+		score: 10
+	}
 	let died = false
 	while (!died) {
-		level++
-		died = await manageLevel(level, width, height)
+		gameStats.level++
+		renderMap.renderLevel(gameStats.level)
+		died = await manageLevel(width, height, gameStats)
 	}
 
 	// High scores?
 }
 
-async function manageLevel(level, width, height) {
-	let map = mapSystem.createMap(width, height, level)
+async function manageLevel(width, height, gameStats) {
+	let map = mapSystem.createMap(width, height, gameStats)
 	renderMap.launch(map.simulateReal())
 	let player = playerSystem.getPlayer()
-	await levelLoop(map, player, level)
+	player.score = gameStats.score
+	await levelLoop(map, player, gameStats.level)
+	gameStats.score = player.score
 	return player.dead
+}
+
+function entityIterator(entity) {
+	let index = 0
+	let next = function() {
+		if (entity.length === 0) return false
+		index++
+		index %= entity.length
+		return entity[index]
+	}
+	return next
 }
 
 async function levelLoop(map, player, level) {
 	const clockSpeed = 30
 
-	let zoidIndex = 0
+	let nextZoid = entityIterator(map.entities.zoids)
+	let nextZoidrone = entityIterator(map.entities.zoidrones)
 	while (!player.escaped && !player.dead) {
 		if (!player.menu && !player.awaitBegin) {
-			for (let actor of map.actors) {
-				if (Array.isArray(actor)) {
-					if (actor.length > 0) {
-						zoidIndex %= actor.length
-						await doNextAction(actor[zoidIndex])
-						zoidIndex++
-					}
-				} else {
-					await doNextAction(actor)
-				}
+			await doNextAction(player)
+			let zoid = nextZoid()
+			if (zoid) {
+				await doNextAction(zoid)
 			}
+			let zoidrone = nextZoidrone()
+			if (zoidrone) {
+				await doNextAction(zoidrone)
+			}
+
 			if (player.shield) {
 				if (Math.random() < shieldPointProb && !playerSystem.spendPoints(1)) {
 					player.shield = false
