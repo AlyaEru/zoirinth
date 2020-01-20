@@ -1,9 +1,7 @@
 const util = require('./utilities')
 const dirs = require('./directions')
 const zoidSystem = require('./zoid')
-
-const wakingProb = 0.001
-const awakeProb = 0.03
+const constants = require('./gameConstants').constants
 
 // Returns a new zoid
 function create(map, loc) {
@@ -29,13 +27,13 @@ function addAction(map, zoidrone) {
 	return () => {
 		switch (zoidrone.mode) {
 			case 'dormant':
-				if (Math.random() < wakingProb) {
+				if (Math.random() < constants.zoidroneWakingProb) {
 					zoidrone.mode = 'waking'
 				}
 				// if random value, switch to waking
 				break
 			case 'waking':
-				if (Math.random() < awakeProb) {
+				if (Math.random() < constants.zoidroneTransformProb) {
 					map.removeEntity('zoidrones', zoidrone.loc)
 					zoidSystem.born(map, zoidrone.loc)
 				}

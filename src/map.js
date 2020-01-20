@@ -6,6 +6,7 @@ const zoidSystem = require('./zoid')
 const zoidroneSystem = require('./zoidrone')
 const mineSystem = require('./mine')
 const renderMap = require('./renderMap')
+const constants = require('./gameConstants').constants
 
 let takenPoints = []
 
@@ -205,9 +206,9 @@ function zoidDrop(map, loc) {
 	//is this affected by the level, number of points?
 	//is affected by zoid's number of clovers
 	let randNum = Math.random()
-	if (randNum < 0.003) {
+	if (randNum < constants.layZoidroneProb) {
 		map.entities.zoidrones.push(zoidroneSystem.create(map, loc))
-	} else if (randNum < 0.005) {
+	} else if (randNum < constants.layMineProb + constants.layZoidroneProb) {
 		map.entities.mines.push(mineSystem.create(map, loc))
 	} else {
 		map.maze[loc.y][loc.x] = 'pod'

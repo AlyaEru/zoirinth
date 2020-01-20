@@ -11,6 +11,8 @@ bug: when zoids lay zoidrones/mines they appear as zoidrones/mines until zoid mo
 
 shield mode should stay on per level
 
+zoids can drop clovers
+
 zoidrones
 - waking zoidrones should give 50 pts
 

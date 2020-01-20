@@ -1,8 +1,7 @@
 const util = require('./utilities')
 const dirs = require('./directions')
 const renderMap = require('./renderMap')
-
-const explodeProb = 0.0001
+const constants = require('./gameConstants').constants
 
 // Returns a new mine
 function create(map, loc) {
@@ -29,7 +28,7 @@ function create(map, loc) {
 function addAction(map, mine) {
 	return () => {
 		//if less than threshold, explode
-		if (Math.random() < explodeProb) {
+		if (Math.random() < constants.mineExplodeProb) {
 			mine.explode()
 		} else {
 			mine.actionQueue.push(addAction(map, mine))
