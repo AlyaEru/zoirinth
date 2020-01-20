@@ -11,12 +11,15 @@ let takenPoints = []
 
 function isShootableWall(map, loc) {
 	type = itemAt(map, loc)
+	return type.substring(type.length - 5) === '_weak' && !isEdgeWall(map, loc)
+}
+
+function isEdgeWall(map, loc) {
 	return (
-		type.substring(type.length - 5) === '_weak' &&
-		loc.y > 0 &&
-		loc.y < map.maze.length - 1 &&
-		loc.x > 0 &&
-		loc.x < map.maze[0].length - 1
+		loc.y === 0 ||
+		loc.y === map.maze.length - 1 ||
+		loc.x === 0 ||
+		loc.x === map.maze[0].length - 1
 	)
 }
 
@@ -71,6 +74,10 @@ function createMap(width, height, gameStats) {
 
 	map.lookNext = (entity, dir) => {
 		return lookNext(map, entity, dir)
+	}
+
+	map.explode = loc => {
+		explode(map, loc)
 	}
 
 	createEntitiesAndActors(map)
@@ -198,9 +205,9 @@ function zoidDrop(map, loc) {
 	//is this affected by the level, number of points?
 	//is affected by zoid's number of clovers
 	let randNum = Math.random()
-	if (randNum < 0.005) {
+	if (randNum < 0.003) {
 		map.entities.zoidrones.push(zoidroneSystem.create(map, loc))
-	} else if (randNum < 0.01) {
+	} else if (randNum < 0.05) {
 		map.entities.mines.push(mineSystem.create(map, loc))
 	} else {
 		map.maze[loc.y][loc.x] = 'pod'
@@ -281,7 +288,7 @@ function handleEntityMove(map, entity, loc) {
 				}
 				break
 			case 'zoid':
-				zoid = map.entities.zoids.filter(
+				let zoid = map.entities.zoids.filter(
 					zoid => zoid.loc.x === loc.x && zoid.loc.y === loc.y
 				)[0]
 				if (zoid.clovers > 0) {
@@ -290,6 +297,12 @@ function handleEntityMove(map, entity, loc) {
 				} else {
 					removeEntity(map, 'zoids', zoid.loc)
 				}
+				break
+			case 'mine':
+				let mine = map.entities.mines.filter(
+					mine => mine.loc.x === loc.x && mine.loc.y === loc.y
+				)[0]
+				mine.explode()
 				break
 			default:
 				if (isShootableWall(map, loc)) {
@@ -308,6 +321,40 @@ function spawnEntity(map, entity) {
 
 function lookNext(map, entity, dir) {
 	return itemAt(map, dirs.locAt(entity.loc, dir))
+}
+
+function explode(map, loc) {
+	switch (itemAt(map, loc)) {
+		case 'outside':
+			break
+		case 'clover':
+			removeEntity(map, 'clovers', loc)
+			map.entities.players[0].clovers++
+			break
+		case 'zoidrone':
+			removeEntity(map, 'zoidrones', loc)
+			break
+		case 'player':
+			playerSystem.getPlayer().dead = true
+			break
+		case 'zoid':
+			let zoid = map.entities.zoids.filter(
+				zoid => zoid.loc.x === loc.x && zoid.loc.y === loc.y
+			)[0]
+			map.entities.players[0].clovers += zoid.clovers
+			removeEntity(map, 'zoids', zoid.loc)
+			break
+		case 'mine':
+			let mine = map.entities.mines.filter(
+				mine => mine.loc.x === loc.x && mine.loc.y === loc.y
+			)[0]
+			mine.explode()
+		default:
+			if (!isEdgeWall(map, loc)) {
+				map.maze[loc.y][loc.x] = 'space'
+			}
+			console.log(itemAt(map, loc))
+	}
 }
 
 function itemAt(map, loc) {
@@ -335,7 +382,7 @@ function randSpawnPoint(map) {
 				match = true
 			}
 		}
-		if (match == false) {
+		if (match === false) {
 			takenPoints.push(point)
 			return point
 		}

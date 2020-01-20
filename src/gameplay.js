@@ -57,6 +57,9 @@ async function levelLoop(map, player, level) {
 			if (zoidrone) {
 				await doNextAction(zoidrone)
 			}
+			for (let mine of map.entities.mines) {
+				await doNextAction(mine)
+			}
 
 			if (player.shield) {
 				if (Math.random() < shieldPointProb && !playerSystem.spendPoints(1)) {

@@ -6,17 +6,17 @@ add randomness
 - random wait before portal spawn
 - randomly spawn superpods
 
-bug: points resetting to 10 when entering next level
+bug: when zoids lay zoidrones/mines they appear as zoidrones/mines until zoid moves
+- make it lay behind itself rather than under itself? or lay under itself right before moving?
+
+shield mode should stay on per level
 
 zoidrones
 - waking zoidrones should give 50 pts
-- when zoids lay zoidrones they appear as zoidrones until moving
 
 mines
-- random spawn
-- destroying stuff
-- random blow up
-- setting them off (shooting, running into them)
+- running into mines: shield vs. no shield
+- number of mine spawns should increase per level
 
 more complex zoid AI
 - preferring unexplored territory
@@ -24,7 +24,6 @@ more complex zoid AI
 - chasing the player
 - shooting to escape being trapped
 
-shield mode
 
 hyperspace (random teleport)
 

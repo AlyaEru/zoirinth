@@ -118,6 +118,7 @@ module.exports = {
 	launch: launchGameboard,
 	render: renderGameboard,
 	renderBulletExplosion: renderBulletExplosion,
+	renderExplosion: renderExplosion,
 	renderScore: renderScore,
 	renderLevel: renderLevel,
 	renderPlayerInfo: renderPlayerInfo

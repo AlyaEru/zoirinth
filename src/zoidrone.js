@@ -3,7 +3,7 @@ const dirs = require('./directions')
 const zoidSystem = require('./zoid')
 
 const wakingProb = 0.001
-const awakeProb = 0.01
+const awakeProb = 0.03
 
 // Returns a new zoid
 function create(map, loc) {
@@ -35,9 +35,7 @@ function addAction(map, zoidrone) {
 				// if random value, switch to waking
 				break
 			case 'waking':
-				console.log('waking')
 				if (Math.random() < awakeProb) {
-					console.log('tryna doit')
 					map.removeEntity('zoidrones', zoidrone.loc)
 					zoidSystem.born(map, zoidrone.loc)
 				}

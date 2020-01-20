@@ -1,7 +1,8 @@
 const util = require('./utilities')
 const dirs = require('./directions')
+const renderMap = require('./renderMap')
 
-const explodeProb = 0.001
+const explodeProb = 0.0001
 
 // Returns a new mine
 function create(map, loc) {
@@ -17,6 +18,9 @@ function create(map, loc) {
 	}
 
 	mine.addAction = addAction(map, mine)
+	mine.explode = () => {
+		explode(map, mine)
+	}
 
 	return mine
 }
@@ -25,7 +29,29 @@ function create(map, loc) {
 function addAction(map, mine) {
 	return () => {
 		//if less than threshold, explode
-		mine.actionQueue.push(addAction(map, mine))
+		if (Math.random() < explodeProb) {
+			mine.explode()
+		} else {
+			mine.actionQueue.push(addAction(map, mine))
+		}
+	}
+}
+
+function explode(map, mine) {
+	renderMap.renderExplosion(mine.loc.x, mine.loc.y, 200)
+	map.removeEntity('mines', mine.loc)
+	let locs = [
+		{x: mine.loc.x - 1, y: mine.loc.y},
+		{x: mine.loc.x - 1, y: mine.loc.y - 1},
+		{x: mine.loc.x - 1, y: mine.loc.y + 1},
+		{x: mine.loc.x, y: mine.loc.y - 1},
+		{x: mine.loc.x, y: mine.loc.y + 1},
+		{x: mine.loc.x + 1, y: mine.loc.y},
+		{x: mine.loc.x + 1, y: mine.loc.y - 1},
+		{x: mine.loc.x + 1, y: mine.loc.y + 1}
+	]
+	for (let loc of locs) {
+		map.explode(loc)
 	}
 }
 
