@@ -207,7 +207,7 @@ function zoidDrop(map, loc) {
 	let randNum = Math.random()
 	if (randNum < 0.003) {
 		map.entities.zoidrones.push(zoidroneSystem.create(map, loc))
-	} else if (randNum < 0.05) {
+	} else if (randNum < 0.005) {
 		map.entities.mines.push(mineSystem.create(map, loc))
 	} else {
 		map.maze[loc.y][loc.x] = 'pod'
