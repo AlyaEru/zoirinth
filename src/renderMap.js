@@ -1,3 +1,5 @@
+const util = require('./utilities')
+
 function launchGameboard(maze) {
 	let height = maze.length
 	let width = maze[0].length
@@ -40,7 +42,7 @@ function renderGameboard(maze) {
 }
 
 function renderExplosion(x, y, explodeTime) {
-	let explosion = shuffle([
+	let explosion = util.shuffle([
 		'explode1',
 		'explode2',
 		'explode3',
@@ -110,21 +112,6 @@ function renderScore(score) {
 
 function renderLevel(level) {
 	$('#level').text('Level: ' + level)
-}
-
-/**
- * Shuffles array in place.
- * @param {Array} a items An array containing the items.
- */
-function shuffle(a) {
-	var j, x, i
-	for (i = a.length - 1; i > 0; i--) {
-		j = Math.floor(Math.random() * (i + 1))
-		x = a[i]
-		a[i] = a[j]
-		a[j] = x
-	}
-	return a
 }
 
 module.exports = {

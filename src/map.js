@@ -4,6 +4,7 @@ const buildMaze = require('./buildMaze')
 const playerSystem = require('./player')
 const zoidSystem = require('./zoid')
 const zoidroneSystem = require('./zoidrone')
+const mineSystem = require('./mine')
 const renderMap = require('./renderMap')
 
 let takenPoints = []
@@ -29,7 +30,8 @@ function createMap(width, height, gameStats) {
 		entities: {
 			zaps: [],
 			zoids: [],
-			zoidrones: []
+			zoidrones: [],
+			mines: []
 		},
 		clovers: level + 4,
 		zoids: level + 2
@@ -65,6 +67,10 @@ function createMap(width, height, gameStats) {
 
 	map.spawnEntity = entity => {
 		spawnEntity(map, entity)
+	}
+
+	map.lookNext = (entity, dir) => {
+		return lookNext(map, entity, dir)
 	}
 
 	createEntitiesAndActors(map)
@@ -191,8 +197,11 @@ function moveEntity(map, entity, dir) {
 function zoidDrop(map, loc) {
 	//is this affected by the level, number of points?
 	//is affected by zoid's number of clovers
-	if (Math.random() < 0.005) {
+	let randNum = Math.random()
+	if (randNum < 0.005) {
 		map.entities.zoidrones.push(zoidroneSystem.create(map, loc))
+	} else if (randNum < 0.01) {
+		map.entities.mines.push(mineSystem.create(map, loc))
 	} else {
 		map.maze[loc.y][loc.x] = 'pod'
 	}

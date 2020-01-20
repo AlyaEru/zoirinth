@@ -19,12 +19,19 @@ function create(map) {
 	let zoid = {
 		actionQueue: [],
 		runMode: true,
-		mode: ''
+		mode: '',
+		runthrough: {
+			clover: true,
+			space: true,
+			pod: true,
+			superpod: true,
+			player: true
+		}
 	}
 	zoid.actionQueue.push(addAction(map, zoid))
 
 	zoid.type = 'zoid'
-	zoid.mode = util.randElem(zoidModes)
+	zoid.mode = 'random' //util.randElem(zoidModes)
 	zoid.clovers = 0
 
 	zoid.getClass = () => {
@@ -41,9 +48,25 @@ function addAction(map, zoid) {
 	return () => {
 		switch (zoid.mode) {
 			case 'random':
-				zoid.actionQueue.unshift(() =>
-					map.moveEntity(zoid, util.randElem(dirs.dirs))
-				)
+				let randDirs = util.shuffle(dirs.dirs)
+				let dir = false
+				for (let i = 0; i < randDirs.length; i++) {
+					if (zoid.runthrough[map.lookNext(zoid, randDirs[i])]) {
+						dir = randDirs[i]
+						break
+					}
+				}
+				if (!dir) {
+					zoid.mode = 'stuck'
+				} else {
+					zoid.actionQueue.unshift(() => map.moveEntity(zoid, dir))
+				}
+				break
+			case 'stuck':
+				zoid.actionQueue.push(async function() {
+					await map.shoot(zoid, util.randElem(dirs.dirs))
+				})
+				zoid.mode = 'random'
 				break
 			case 'agressive':
 				let player = playerSystem.getPlayer()
