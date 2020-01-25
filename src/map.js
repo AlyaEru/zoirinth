@@ -41,7 +41,7 @@ function createMap(width, height, gameStats) {
 		zoids: level + 2
 	}
 
-	map.maze = buildMaze.build(width, height, 1 - (level - (1 % 5)) / 4)
+	map.maze = buildMaze.build(width, height, 1 - ((level - 1) % 5) / 4)
 
 	takenPoints = []
 
@@ -256,13 +256,13 @@ function handleEntityMove(map, entity, loc) {
 			case 'space':
 			case 'pod':
 				map.maze[loc.y][loc.x] = 'space'
-				zoidDrop(map, loc)
+				zoidDrop(map, zoid.loc)
 				zoid.loc = loc
 				return true
 			case 'clover':
 				zoid.clovers++
 				removeEntity(map, 'clovers', loc)
-				zoidDrop(map, loc)
+				zoidDrop(map, zoid.loc)
 				zoid.loc = loc
 				return true
 			case 'player':
