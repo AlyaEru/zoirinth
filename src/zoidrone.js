@@ -4,12 +4,11 @@ const zoidSystem = require('./zoid')
 const constants = require('./gameConstants').constants
 
 // Returns a new zoid
-function create(map, loc) {
+function make(map) {
 	let zoidrone = {
 		actionQueue: [],
 		mode: 'dormant',
-		type: 'zoidrone',
-		loc: loc
+		type: 'zoidrone'
 	}
 	zoidrone.actionQueue.push(addAction(map, zoidrone))
 
@@ -19,6 +18,13 @@ function create(map, loc) {
 
 	zoidrone.addAction = addAction(map, zoidrone)
 
+	map.entities.zoidrones.push(zoidrone)
+	return zoidrone
+}
+
+function drop(map, loc) {
+	zoidrone = make(map)
+	zoidrone.loc = loc
 	return zoidrone
 }
 
@@ -35,7 +41,7 @@ function addAction(map, zoidrone) {
 			case 'waking':
 				if (Math.random() < constants.zoidroneTransformProb) {
 					map.removeEntity('zoidrones', zoidrone.loc)
-					zoidSystem.born(map, zoidrone.loc)
+					zoidSystem.drop(map, zoidrone.loc)
 				}
 				// if random value, wake up (create zoid at loc, delete myself from map?)
 				break
@@ -45,5 +51,5 @@ function addAction(map, zoidrone) {
 }
 
 module.exports = {
-	create: create
+	drop
 }

@@ -4,11 +4,10 @@ const renderMap = require('./renderMap')
 const constants = require('./gameConstants').constants
 
 // Returns a new mine
-function create(map, loc) {
+function make(map) {
 	let mine = {
 		actionQueue: [],
-		type: 'mine',
-		loc: loc
+		type: 'mine'
 	}
 	mine.actionQueue.push(addAction(map, mine))
 
@@ -21,6 +20,13 @@ function create(map, loc) {
 		explode(map, mine)
 	}
 
+	map.entities.mines.push(mine)
+	return mine
+}
+
+function drop(map, loc) {
+	mine = make(map)
+	mine.loc = loc
 	return mine
 }
 
@@ -55,5 +61,5 @@ function explode(map, mine) {
 }
 
 module.exports = {
-	create: create
+	drop
 }

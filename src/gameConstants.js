@@ -3,7 +3,8 @@ const constants = {
 	zoidroneWakingProb: 0.0007,
 	zoidroneTransformProb: 0.01,
 	layZoidroneProb: 0.003,
-	layMineProb: 0.002
+	layMineProb: 0.002,
+	layCloverProb: 0.001
 }
 
 module.exports = {

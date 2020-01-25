@@ -13,9 +13,6 @@ shield mode should stay on per level
 
 zoids can drop clovers
 
-zoidrones
-- waking zoidrones should give 50 pts
-
 mines
 - running into mines: shield vs. no shield
 - number of mine spawns should increase per level

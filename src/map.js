@@ -4,6 +4,7 @@ const buildMaze = require('./buildMaze')
 const playerSystem = require('./player')
 const zoidSystem = require('./zoid')
 const zoidroneSystem = require('./zoidrone')
+const cloverSystem = require('./clover')
 const mineSystem = require('./mine')
 const renderMap = require('./renderMap')
 const constants = require('./gameConstants').constants
@@ -35,7 +36,8 @@ function createMap(width, height, gameStats) {
 			zaps: [],
 			zoids: [],
 			zoidrones: [],
-			mines: []
+			mines: [],
+			clovers: []
 		},
 		clovers: level + 4,
 		zoids: level + 2
@@ -90,28 +92,12 @@ function createEntitiesAndActors(map) {
 	let player = playerSystem.createPlayer(map)
 	map.entities.players = [player]
 
-	createZoids(map, map.zoids)
-	createClovers(map, map.clovers)
-}
-
-function createZoids(map, numZoids) {
-	for (let i = 0; i < numZoids; i++) {
-		zoidSystem.create(map)
+	for (let i = 0; i < map.zoids; i++) {
+		zoidSystem.randSpawn(map)
 	}
-}
-
-function createClovers(map, numClovers) {
-	let clovers = []
-
-	for (let i = 0; i < numClovers; i++) {
-		clovers.push({
-			loc: randSpawnPoint(map),
-			getClass: () => 'clover',
-			type: 'clover'
-		})
+	for (let i = 0; i < map.clovers; i++) {
+		cloverSystem.randSpawn(map)
 	}
-
-	map.entities.clovers = clovers
 }
 
 function generateExit(map) {
@@ -205,11 +191,24 @@ function moveEntity(map, entity, dir) {
 function zoidDrop(map, loc) {
 	//is this affected by the level, number of points?
 	//is affected by zoid's number of clovers
+	let zoid = map.entities.zoids.filter(
+		zoid => zoid.loc.x === loc.x && zoid.loc.y === loc.y
+	)[0]
+
 	let randNum = Math.random()
-	if (randNum < constants.layZoidroneProb) {
-		map.entities.zoidrones.push(zoidroneSystem.create(map, loc))
-	} else if (randNum < constants.layMineProb + constants.layZoidroneProb) {
-		map.entities.mines.push(mineSystem.create(map, loc))
+	let addedTo = 0
+	let keepTotal = adding => {
+		addedTo += adding
+		return addedTo
+	}
+
+	if (randNum < keepTotal(constants.layZoidroneProb)) {
+		zoidroneSystem.drop(map, loc)
+	} else if (randNum < keepTotal(constants.layMineProb)) {
+		mineSystem.drop(map, loc)
+	} else if (randNum < keepTotal(constants.layCloverProb * zoid.clovers)) {
+		cloverSystem.drop(map, loc)
+		zoid.clovers--
 	} else {
 		map.maze[loc.y][loc.x] = 'pod'
 	}
