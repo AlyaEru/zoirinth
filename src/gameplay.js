@@ -53,8 +53,7 @@ async function levelLoop(map, player, level) {
 			if (zoid) {
 				await doNextAction(zoid)
 			}
-			let zoidrone = nextZoidrone()
-			if (zoidrone) {
+			for (let zoidrone of map.entities.zoidrones) {
 				await doNextAction(zoidrone)
 			}
 			for (let mine of map.entities.mines) {

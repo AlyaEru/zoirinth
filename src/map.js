@@ -238,9 +238,15 @@ function handleEntityMove(map, entity, loc) {
 				playerSystem.getPlayer().dead = true
 				break
 			case 'zoidrone':
+				let zoidrone = map.entities.zoidrones.filter(
+					zoidrone => zoidrone.loc.x === loc.x && zoidrone.loc.y === loc.y
+				)[0]
+				if (zoidrone.mode === 'waking') {
+					player.score += 50
+				} else {
+					player.score += 10
+				}
 				removeEntity(map, 'zoidrones', loc)
-				player.score += 10
-				// remove zoidrone
 				player.loc = loc
 				return true
 			case 'lr_portal':
