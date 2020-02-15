@@ -2,11 +2,12 @@ const util = require('./utilities')
 const dirs = require('./directions')
 const zoidSystem = require('./zoid')
 const constants = require('./gameConstants').constants
+const actionQueueSystem = require('./actionQueue')
 
 // Returns a new zoid
 function make(map) {
 	let zoidrone = {
-		actionQueue: [],
+		actionQueue: actionQueueSystem.make(),
 		mode: 'dormant',
 		type: 'zoidrone'
 	}

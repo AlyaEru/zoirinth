@@ -1,6 +1,7 @@
 const util = require('./utilities')
 const dirs = require('./directions')
 const playerSystem = require('./player')
+const actionQueueSystem = require('./actionQueue')
 
 const zoidModes = ['random', 'agressive']
 
@@ -19,7 +20,7 @@ function drop(map, loc) {
 
 function make(map) {
 	let zoid = {
-		actionQueue: [],
+		actionQueue: actionQueueSystem.make(),
 		runMode: true,
 		mode: '',
 		runthrough: {
@@ -61,7 +62,9 @@ function addAction(map, zoid) {
 				if (!dir) {
 					zoid.mode = 'stuck'
 				} else {
-					zoid.actionQueue.unshift(() => map.moveEntity(zoid, dir))
+					zoid.actionQueue.unshift(() => {
+						map.moveEntity(zoid, dir)
+					})
 				}
 				break
 			case 'stuck':
@@ -83,9 +86,9 @@ function addAction(map, zoid) {
 						await map.shoot(zoid, shootDir)
 					})
 				} else {
-					zoid.actionQueue.unshift(() =>
+					zoid.actionQueue.unshift(() => {
 						map.moveEntity(zoid, util.randElem(dirs.dirs))
-					)
+					})
 				}
 		}
 		//change zoid mode?

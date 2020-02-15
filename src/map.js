@@ -16,6 +16,52 @@ function isShootableWall(map, loc) {
 	return type.substring(type.length - 5) === '_weak' && !isEdgeWall(map, loc)
 }
 
+function dirOfNearestEntity(map, me, type) {
+	let closestDir = false
+	let shortestDistance = Infinity
+	//look left
+	for (let i = me.loc.x; i >= 0; i--) {
+		if (itemAt(map, {x: i, y: me.loc.y}) === type) {
+			let dist = Math.abs(i - me.loc.x)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'l'
+			}
+		}
+	}
+	//look right
+	for (let i = me.loc.x; i < map.maze[0].length; i++) {
+		if (itemAt(map, {x: i, y: me.loc.y}) === type) {
+			let dist = Math.abs(i - me.loc.x)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'r'
+			}
+		}
+	}
+	//look up
+	for (let i = me.loc.y; i >= 0; i--) {
+		if (itemAt(map, {x: me.loc.x, y: i}) === type) {
+			let dist = Math.abs(i - me.loc.y)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'u'
+			}
+		}
+	}
+	//look down
+	for (let i = me.loc.x; i < map.maze.length; i++) {
+		if (itemAt(map, {x: me.loc.x, y: i}) === type) {
+			let dist = Math.abs(i - me.loc.x)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'd'
+			}
+		}
+	}
+	return closestDir
+}
+
 function isEdgeWall(map, loc) {
 	return (
 		loc.y === 0 ||
@@ -30,8 +76,7 @@ function createMap(width, height, gameStats) {
 	let map = {
 		width: width,
 		height: height,
-		gameStats,
-		gameStats,
+		gameStats: gameStats,
 		entities: {
 			zaps: [],
 			zoids: [],
@@ -81,6 +126,10 @@ function createMap(width, height, gameStats) {
 
 	map.explode = loc => {
 		explode(map, loc)
+	}
+
+	map.dirOfNearestEntity = (me, type) => {
+		return dirOfNearestEntity(map, me, type)
 	}
 
 	createEntitiesAndActors(map)
