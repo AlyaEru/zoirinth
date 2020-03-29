@@ -132,6 +132,10 @@ function createMap(width, height, gameStats) {
 		return dirOfNearestEntity(map, me, type)
 	}
 
+	map.itemAt = loc => {
+		return itemAt(map, loc)
+	}
+
 	createEntitiesAndActors(map)
 
 	return map
