@@ -124,7 +124,6 @@ function addAction(map, zoid) {
 					}
 				}
 				if (newDir) {
-					console.log(newDir)
 					dir = newDir
 				}
 				if (!dir) {
@@ -146,7 +145,6 @@ function addAction(map, zoid) {
 				let bestDir = util.randElem(dirs.dirs)
 				for (let dir of dirs.dirs) {
 					let steps = DFS(dirs.locAt(loc, dir), dir, 10)
-					//console.log(steps, dir)
 					if (steps < shortestSteps) {
 						shortestSteps = steps
 						bestDir = dir

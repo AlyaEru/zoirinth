@@ -49,6 +49,30 @@ function spendPoints(points) {
 	return false
 }
 
+function hyperblast(map) {
+	if (spendPoints(500)) {
+		const radius = 5
+		let locs = []
+		for (let x = -radius; x <= radius; x++) {
+			for (let y = -radius; y <= radius; y++) {
+				if (
+					(x != 0 || y != 0) &&
+					Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) <= radius
+				) {
+					if (Math.random() < 0.9) {
+						locs.push({x: x, y: y})
+					}
+				}
+			}
+		}
+
+		for (let loc of locs) {
+			console.log({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
+			map.explode({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
+		}
+	}
+}
+
 function playerShoot(map, dir) {
 	if (spendPoints(10)) {
 		player.actionQueue.push(async function() {
@@ -123,6 +147,11 @@ function playerEvent(map, event) {
 			break
 		case 'Space':
 			shootNearestZoid(map)
+			break
+		case 'KeyH':
+			player.actionQueue.push(() => {
+				hyperblast(map)
+			})
 			break
 		default:
 		// Do nothing

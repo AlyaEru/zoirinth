@@ -367,7 +367,6 @@ function handleEntityMove(map, entity, loc) {
 				if (isShootableWall(map, loc)) {
 					map.maze[loc.y][loc.x] = 'space'
 				}
-				console.log(itemAt(map, loc))
 		}
 	}
 	return false
@@ -412,16 +411,15 @@ function explode(map, loc) {
 			if (!isEdgeWall(map, loc)) {
 				map.maze[loc.y][loc.x] = 'space'
 			}
-			console.log(itemAt(map, loc))
 	}
 }
 
 function itemAt(map, loc) {
 	if (
 		loc.x < 0 ||
-		loc.x > map.width * 2 + 1 ||
+		loc.x > map.width * 2 ||
 		loc.y < 0 ||
-		loc.y > map.height * 2 + 1
+		loc.y > map.height * 2
 	) {
 		return 'outside'
 	} else {
