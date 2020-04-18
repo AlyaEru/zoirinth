@@ -48,16 +48,16 @@ async function levelLoop(map, player, level) {
 	let nextZoidrone = entityIterator(map.entities.zoidrones)
 	while (!player.escaped && !player.dead) {
 		if (!player.menu && !player.awaitBegin) {
-			await doNextAction(player)
+			await player.actionQueue.doAction()
 			let zoid = nextZoid()
 			if (zoid) {
-				await doNextAction(zoid)
+				await zoid.actionQueue.doAction()
 			}
 			for (let zoidrone of map.entities.zoidrones) {
-				await doNextAction(zoidrone)
+				await zoidrone.actionQueue.doAction()
 			}
 			for (let mine of map.entities.mines) {
-				await doNextAction(mine)
+				await mine.actionQueue.doAction()
 			}
 
 			if (player.shield) {
@@ -77,15 +77,6 @@ async function levelLoop(map, player, level) {
 		}
 
 		await util.wait(clockSpeed)
-	}
-}
-
-async function doNextAction(actor) {
-	// TODO: if there's more than one actor, shuffle through
-	if (actor.actionQueue.length > 0) {
-		action = actor.actionQueue[0]
-		actor.actionQueue = actor.actionQueue.slice(1)
-		await action()
 	}
 }
 

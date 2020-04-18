@@ -1,3 +1,4 @@
+const actionQueueSystem = require('./actionQueue')
 let player
 
 function getPlayer() {
@@ -6,7 +7,7 @@ function getPlayer() {
 
 function createPlayer(map) {
 	player = {
-		actionQueue: [],
+		actionQueue: actionQueueSystem.make(),
 		runMode: true,
 		score: map.gameStats.score,
 		shield: false,
@@ -48,6 +49,30 @@ function spendPoints(points) {
 	return false
 }
 
+function hyperblast(map) {
+	if (spendPoints(500)) {
+		const radius = 5
+		let locs = []
+		for (let x = -radius; x <= radius; x++) {
+			for (let y = -radius; y <= radius; y++) {
+				if (
+					(x != 0 || y != 0) &&
+					Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) <= radius
+				) {
+					if (Math.random() < 0.9) {
+						locs.push({x: x, y: y})
+					}
+				}
+			}
+		}
+
+		for (let loc of locs) {
+			console.log({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
+			map.explode({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
+		}
+	}
+}
+
 function playerShoot(map, dir) {
 	if (spendPoints(10)) {
 		player.actionQueue.push(async function() {
@@ -55,6 +80,17 @@ function playerShoot(map, dir) {
 		})
 		player.menu = false
 	}
+}
+
+function shootNearestZoid(map) {
+	//It needs to evaluate nearest zoid in the queue, not before adding to the queue. And cancel actions if dir is false.
+	player.actionQueue.push(async function() {
+		//find nearest zoid (if there is one)
+		let dir = map.dirOfNearestEntity(player, 'zoid')
+		if (dir && spendPoints(10)) {
+			await map.shoot(player, dir)
+		} else return player.actionQueue.skip
+	})
 }
 
 function playerEvent(map, event) {
@@ -65,7 +101,9 @@ function playerEvent(map, event) {
 			if (player.menu) {
 				playerShoot(map, 'd')
 			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'd'))
+				player.actionQueue.push(() => {
+					map.moveEntity(player, 'd')
+				})
 			}
 			break
 		case 'ArrowUp':
@@ -73,7 +111,9 @@ function playerEvent(map, event) {
 			if (player.menu) {
 				playerShoot(map, 'u')
 			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'u'))
+				player.actionQueue.push(() => {
+					map.moveEntity(player, 'u')
+				})
 			}
 			break
 		case 'ArrowLeft':
@@ -81,7 +121,9 @@ function playerEvent(map, event) {
 			if (player.menu) {
 				playerShoot(map, 'l')
 			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'l'))
+				player.actionQueue.push(() => {
+					map.moveEntity(player, 'l')
+				})
 			}
 			break
 		case 'ArrowRight':
@@ -89,7 +131,9 @@ function playerEvent(map, event) {
 			if (player.menu) {
 				playerShoot(map, 'r')
 			} else {
-				player.actionQueue.push(() => map.moveEntity(player, 'r'))
+				player.actionQueue.push(() => {
+					map.moveEntity(player, 'r')
+				})
 			}
 			break
 		case 'KeyR':
@@ -100,6 +144,14 @@ function playerEvent(map, event) {
 			break
 		case 'Enter':
 			player.menu = !player.menu
+			break
+		case 'Space':
+			shootNearestZoid(map)
+			break
+		case 'KeyH':
+			player.actionQueue.push(() => {
+				hyperblast(map)
+			})
 			break
 		default:
 		// Do nothing

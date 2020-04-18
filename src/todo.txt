@@ -6,12 +6,7 @@ add randomness
 - random wait before portal spawn
 - randomly spawn superpods
 
-bug: when zoids lay zoidrones/mines they appear as zoidrones/mines until zoid moves
-- make it lay behind itself rather than under itself? or lay under itself right before moving?
-
 shield mode should stay on per level
-
-zoids can drop clovers
 
 mines
 - running into mines: shield vs. no shield
@@ -22,7 +17,6 @@ more complex zoid AI
 - track left, track right?
 - chasing the player
 - shooting to escape being trapped
-
 
 hyperspace (random teleport)
 

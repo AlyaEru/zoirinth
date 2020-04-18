@@ -2,11 +2,12 @@ const util = require('./utilities')
 const dirs = require('./directions')
 const renderMap = require('./renderMap')
 const constants = require('./gameConstants').constants
+const actionQueueSystem = require('./actionQueue')
 
 // Returns a new mine
 function make(map) {
 	let mine = {
-		actionQueue: [],
+		actionQueue: actionQueueSystem.make(),
 		type: 'mine'
 	}
 	mine.actionQueue.push(addAction(map, mine))
@@ -37,7 +38,9 @@ function addAction(map, mine) {
 		if (Math.random() < constants.mineExplodeProb) {
 			mine.explode()
 		} else {
-			mine.actionQueue.push(addAction(map, mine))
+			mine.actionQueue.push(() => {
+				addAction(map, mine)
+			})
 		}
 	}
 }

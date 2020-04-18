@@ -16,6 +16,52 @@ function isShootableWall(map, loc) {
 	return type.substring(type.length - 5) === '_weak' && !isEdgeWall(map, loc)
 }
 
+function dirOfNearestEntity(map, me, type) {
+	let closestDir = false
+	let shortestDistance = Infinity
+	//look left
+	for (let i = me.loc.x; i >= 0; i--) {
+		if (itemAt(map, {x: i, y: me.loc.y}) === type) {
+			let dist = Math.abs(i - me.loc.x)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'l'
+			}
+		}
+	}
+	//look right
+	for (let i = me.loc.x; i < map.maze[0].length; i++) {
+		if (itemAt(map, {x: i, y: me.loc.y}) === type) {
+			let dist = Math.abs(i - me.loc.x)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'r'
+			}
+		}
+	}
+	//look up
+	for (let i = me.loc.y; i >= 0; i--) {
+		if (itemAt(map, {x: me.loc.x, y: i}) === type) {
+			let dist = Math.abs(i - me.loc.y)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'u'
+			}
+		}
+	}
+	//look down
+	for (let i = me.loc.y; i < map.maze.length; i++) {
+		if (itemAt(map, {x: me.loc.x, y: i}) === type) {
+			let dist = Math.abs(i - me.loc.x)
+			if (dist < shortestDistance) {
+				shortestDistance = dist
+				closestDir = 'd'
+			}
+		}
+	}
+	return closestDir
+}
+
 function isEdgeWall(map, loc) {
 	return (
 		loc.y === 0 ||
@@ -30,8 +76,7 @@ function createMap(width, height, gameStats) {
 	let map = {
 		width: width,
 		height: height,
-		gameStats,
-		gameStats,
+		gameStats: gameStats,
 		entities: {
 			zaps: [],
 			zoids: [],
@@ -81,6 +126,14 @@ function createMap(width, height, gameStats) {
 
 	map.explode = loc => {
 		explode(map, loc)
+	}
+
+	map.dirOfNearestEntity = (me, type) => {
+		return dirOfNearestEntity(map, me, type)
+	}
+
+	map.itemAt = loc => {
+		return itemAt(map, loc)
 	}
 
 	createEntitiesAndActors(map)
@@ -314,7 +367,6 @@ function handleEntityMove(map, entity, loc) {
 				if (isShootableWall(map, loc)) {
 					map.maze[loc.y][loc.x] = 'space'
 				}
-				console.log(itemAt(map, loc))
 		}
 	}
 	return false
@@ -359,16 +411,15 @@ function explode(map, loc) {
 			if (!isEdgeWall(map, loc)) {
 				map.maze[loc.y][loc.x] = 'space'
 			}
-			console.log(itemAt(map, loc))
 	}
 }
 
 function itemAt(map, loc) {
 	if (
 		loc.x < 0 ||
-		loc.x > map.width * 2 + 1 ||
+		loc.x > map.width * 2 ||
 		loc.y < 0 ||
-		loc.y > map.height * 2 + 1
+		loc.y > map.height * 2
 	) {
 		return 'outside'
 	} else {
