@@ -50,7 +50,7 @@ function dirOfNearestEntity(map, me, type) {
 		}
 	}
 	//look down
-	for (let i = me.loc.x; i < map.maze.length; i++) {
+	for (let i = me.loc.y; i < map.maze.length; i++) {
 		if (itemAt(map, {x: me.loc.x, y: i}) === type) {
 			let dist = Math.abs(i - me.loc.x)
 			if (dist < shortestDistance) {
