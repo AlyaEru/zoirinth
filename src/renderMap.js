@@ -27,14 +27,21 @@ function renderGameboard(maze) {
 	$('table#gameboard tr td').each(function() {
 		//processing this cell
 		let currentCell = maze[Math.floor(i / width)][i % width]
-		if (
-			!$(this).hasClass(currentCell) &&
-			!$(this)
-				.attr('class')
-				.includes('explode')
-		) {
-			$(this).removeClass()
-			$(this).addClass(currentCell)
+
+		let classes = $(this)
+			.attr('class')
+			.split(' ')
+
+		if (!$(this).hasClass(currentCell)) {
+			for (j = 0; j < classes.length; j++) {
+				if (!classes[j].includes('explode')) {
+					classes[j] = ''
+				} else {
+					console.log(classes[j])
+				}
+			}
+
+			$(this).attr('class', classes.join(' ') + ' ' + currentCell)
 		}
 
 		i++
