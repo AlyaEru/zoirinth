@@ -1,4 +1,5 @@
 const actionQueueSystem = require('./actionQueue')
+const constants = require('./gameConstants').constants
 let player
 
 function getPlayer() {
@@ -16,12 +17,17 @@ function createPlayer(map) {
 		clovers: 0,
 		type: 'player',
 		menu: false,
-		awaitBegin: true
+		awaitBegin: true,
+		trapped: false
 	}
 
 	player.getClass = () => {
 		if (player.dead) {
 			return 'player_dead'
+		} else if (player.trapped && player.shield) {
+			return 'player_shield_trapped'
+		} else if (player.trapped) {
+			return 'player_trapped'
 		} else if (player.shield) {
 			return 'player_shield'
 		} else {
@@ -95,47 +101,72 @@ function shootNearestZoid(map) {
 
 function playerEvent(map, event) {
 	player.awaitBegin = false
-	switch (event.code) {
-		case 'ArrowDown':
-		case 'KeyS':
-			if (player.menu) {
+
+	if (player.trapped) {
+		switch (event.code) {
+			case 'ArrowDown':
+			case 'KeyS':
+			case 'ArrowUp':
+			case 'KeyW':
+			case 'ArrowLeft':
+			case 'KeyA':
+			case 'ArrowRight':
+			case 'KeyD':
+				if (Math.random() < constants.escapeTrapProb) {
+					player.trapped = false
+				}
+		}
+	} else if (player.menu) {
+		switch (event.code) {
+			case 'ArrowDown':
+			case 'KeyS':
 				playerShoot(map, 'd')
-			} else {
+				break
+			case 'ArrowUp':
+			case 'KeyW':
+				playerShoot(map, 'u')
+				break
+			case 'ArrowLeft':
+			case 'KeyA':
+				playerShoot(map, 'l')
+				break
+			case 'ArrowRight':
+			case 'KeyD':
+				playerShoot(map, 'r')
+				break
+		}
+	} else {
+		switch (event.code) {
+			case 'ArrowDown':
+			case 'KeyS':
 				player.actionQueue.push(() => {
 					map.moveEntity(player, 'd')
 				})
-			}
-			break
-		case 'ArrowUp':
-		case 'KeyW':
-			if (player.menu) {
-				playerShoot(map, 'u')
-			} else {
+				break
+			case 'ArrowUp':
+			case 'KeyW':
 				player.actionQueue.push(() => {
 					map.moveEntity(player, 'u')
 				})
-			}
-			break
-		case 'ArrowLeft':
-		case 'KeyA':
-			if (player.menu) {
-				playerShoot(map, 'l')
-			} else {
+				break
+			case 'ArrowLeft':
+			case 'KeyA':
 				player.actionQueue.push(() => {
 					map.moveEntity(player, 'l')
 				})
-			}
-			break
-		case 'ArrowRight':
-		case 'KeyD':
-			if (player.menu) {
-				playerShoot(map, 'r')
-			} else {
+				break
+			case 'ArrowRight':
+			case 'KeyD':
 				player.actionQueue.push(() => {
 					map.moveEntity(player, 'r')
 				})
-			}
-			break
+				break
+			case 'Space':
+				shootNearestZoid(map)
+				break
+		}
+	}
+	switch (event.code) {
 		case 'KeyR':
 			player.runMode = !player.runMode
 			break
@@ -144,9 +175,6 @@ function playerEvent(map, event) {
 			break
 		case 'Enter':
 			player.menu = !player.menu
-			break
-		case 'Space':
-			shootNearestZoid(map)
 			break
 		case 'KeyH':
 			player.actionQueue.push(() => {

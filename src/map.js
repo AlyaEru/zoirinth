@@ -222,7 +222,12 @@ function moveEntity(map, entity, dir) {
 		lr_portal: true,
 		ud_portal: true,
 		player: true,
-		zoidrone: true
+		zoidrone: true,
+		trap: true
+	}
+
+	if (entity.trapped) {
+		return
 	}
 
 	if (entity.runMode) {
@@ -301,6 +306,10 @@ function handleEntityMove(map, entity, loc) {
 				removeEntity(map, 'zoidrones', loc)
 				player.loc = loc
 				return true
+			case 'trap':
+				player.trapped = true
+				player.loc = loc
+				return true
 			case 'lr_portal':
 			case 'ud_portal':
 				player.escaped = true
@@ -362,6 +371,24 @@ function handleEntityMove(map, entity, loc) {
 					mine => mine.loc.x === loc.x && mine.loc.y === loc.y
 				)[0]
 				mine.explode()
+				break
+			case 'zoidrone':
+				let zoidrone = map.entities.zoidrones.filter(
+					zoidrone => zoidrone.loc.x === loc.x && zoidrone.loc.y === loc.y
+				)[0]
+				removeEntity(map, 'zoidrones', loc)
+				if (Math.random() < constants.createTrapProb) {
+					map.maze[loc.y][loc.x] = 'trap'
+				}
+				break
+			case 'trap':
+				let rand = Math.random()
+				if (rand < 0.2) {
+					map.maze[loc.y][loc.x] = 'space'
+				} else {
+					zap.loc = loc
+					shoot(map, {loc: loc}, dirs.dirs[Math.floor(Math.random() * 4)])
+				}
 				break
 			default:
 				if (isShootableWall(map, loc)) {
