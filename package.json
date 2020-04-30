@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/AlyaEru/zoirinth#readme",
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.5.0"
   },
   "devDependencies": {
     "css-loader": "^3.4.0",
