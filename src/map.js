@@ -223,7 +223,8 @@ function moveEntity(map, entity, dir) {
 		ud_portal: true,
 		player: true,
 		zoidrone: true,
-		trap: true
+		trap: true,
+		mine: true
 	}
 
 	if (entity.trapped) {
@@ -306,6 +307,35 @@ function handleEntityMove(map, entity, loc) {
 				removeEntity(map, 'zoidrones', loc)
 				player.loc = loc
 				return true
+			case 'mine':
+				let mine = map.entities.mines.filter(
+					mine => mine.loc.x === loc.x && mine.loc.y === loc.y
+				)[0]
+				if (player.shield) {
+					//push zoid if possible
+					const dir = dirs.getDir(player.loc, mine.loc)
+					const nextSpace = dirs.locAt(mine.loc, dir)
+					if (
+						['space', 'clover', 'pod', 'superpod'].includes(
+							itemAt(map, nextSpace)
+						)
+					) {
+						//clear item at next location
+						if (itemAt(map, nextSpace) === 'clover') {
+							removeEntity(map, 'clovers', nextSpace)
+							player.clovers++
+						}
+						map[nexSpace.x][nextSpace.y] = 'space'
+						mine.loc = dirs.locAt(mine.loc, dir)
+						player.loc = loc
+						return true
+					} else {
+						mine.explode()
+					}
+				} else {
+					mine.explode()
+				}
+				break
 			case 'trap':
 				player.trapped = true
 				player.loc = loc

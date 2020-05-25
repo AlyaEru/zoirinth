@@ -74,6 +74,22 @@ function move(start, direction) {
 	}
 }
 
+function getDir(startloc, endloc) {
+	if (startloc.x > endloc.x) {
+		return 'l'
+	}
+	if (startloc.x < endloc.x) {
+		return 'r'
+	}
+	if (startloc.y > endloc.y) {
+		return 'u'
+	}
+	if (startloc.y < endloc.y) {
+		return 'd'
+	}
+	return false
+}
+
 module.exports = {
 	dirs: dirs,
 	getPoint: getPoint,
@@ -81,5 +97,6 @@ module.exports = {
 	rotateLeft: rotateLeft,
 	rotateRight: rotateRight,
 	locAt: locAt,
-	move: move
+	move: move,
+	getDir: getDir
 }

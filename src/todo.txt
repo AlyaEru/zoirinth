@@ -9,13 +9,14 @@ add randomness
 shield mode should stay on per level
 
 mines
-- running into mines: shield vs. no shield
 - number of mine spawns should increase per level (no mines level 1)
+
+I think zoids are supposed to push traps
+
+add superpods
 
 hyperspace (random teleport)
 
 invisible mode
-
-traps
 
 black holes
