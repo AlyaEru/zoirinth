@@ -1,5 +1,6 @@
 const mapSystem = require('./map')
 const renderMap = require('./renderMap')
+const renderMenu = require('./renderMenu')
 const playerSystem = require('./player')
 const util = require('./utilities')
 
@@ -13,7 +14,7 @@ async function manageGame(width, height) {
 	let died = false
 	while (!died) {
 		gameStats.level++
-		renderMap.renderLevel(gameStats.level)
+		renderMenu.renderLevel(gameStats.level)
 		died = await manageLevel(width, height, gameStats)
 	}
 
@@ -71,9 +72,9 @@ async function levelLoop(map, player, level) {
 			}
 
 			renderMap.render(map.simulateReal())
-			renderMap.renderScore(player.score)
-			renderMap.renderLevel(level)
-			renderMap.renderPlayerInfo(player)
+			renderMenu.renderScore(player.score)
+			renderMenu.renderLevel(level)
+			renderMenu.renderPlayerInfo(player)
 		}
 
 		await util.wait(clockSpeed)

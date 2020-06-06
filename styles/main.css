@@ -8,13 +8,27 @@
 
 body{background-color:black;font:26px gameFont;color:#ff860d;margin:0;padding:0;}
 
-div#main {
-	width:auto;
-	/*border-left:3px double #ff860d;*/
-	position:absolute;
+
+main{
+	position:fixed;
+	left:0;
 	right:0;
 	top:0;
-	padding:10px;
+	bottom:0;
+	background-color:rgba(0,0,0,.5);
+	text-align:center;
+	
+}
+
+
+div#main, div#menu{
+	width:auto;
+	/*border-left:3px double #ff860d;*/
+	position:relative;
+	display:inline-block;
+	padding:0;
+	margin:1em;
+	vertical-align:top;
 }
 
 
@@ -27,8 +41,10 @@ div#main {
 /* menus */
 
 
-#left-menu, #top-menu {
+#left-menu, #top-menu{
 	list-style-type:none;
+	text-align:left;
+	padding:0;
 }
 #points {
 	display: block;
@@ -45,10 +61,66 @@ div#main {
 	top:0;
 }
 
+li.off:after{
+	color:#ff602a;
+	content: " off";
+}
+li.on:after{
+	color:#62c21f;
+	content: " on";
+}
 
-li.off{
+li#runMode:before{
+	position:absolute;
+	right:0;
+	color:#eee;
+	content: "R";
+}
+li#shield:before{
+	position:absolute;
+	right:0;
+	color:#eee;
+	content: "Q";
+}
+li#invisibility:before{
+	position:absolute;
+	right:0;
+	color:#eee;
+	content: "I";
+}
+
+
+
+/* modals */
+
+#modals div {
+	position:fixed;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	background-color:rgba(0,0,0,.5);
+	text-align:center;
+	
 	display:none;
 }
+
+
+#modals div ul{
+	list-style-type:none;
+	display:inline-block;
+	background-color:rgba(0,0,0,.6);
+	padding:.5em;
+	width:auto;
+	border:4px double #ff860d;/*#2f9aa4;*/
+}
+
+
+#modals div.show{
+	display:block;
+}
+
+
 
 /* gameboard */
 

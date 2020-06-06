@@ -108,25 +108,9 @@ function renderBulletExplosion(x, y, explodeTime) {
 	}, explodeTime)
 }
 
-function renderPlayerInfo(player) {
-	$('#runmode').text('Run Mode ' + (player.runMode ? 'on' : 'off'))
-	$('#shield').text('Sheild ' + (player.shield ? 'on' : 'off'))
-}
-
-function renderScore(score) {
-	$('#points').text('Points: ' + score)
-}
-
-function renderLevel(level) {
-	$('#level').text('Level: ' + level)
-}
-
 module.exports = {
 	launch: launchGameboard,
 	render: renderGameboard,
 	renderBulletExplosion: renderBulletExplosion,
-	renderExplosion: renderExplosion,
-	renderScore: renderScore,
-	renderLevel: renderLevel,
-	renderPlayerInfo: renderPlayerInfo
+	renderExplosion: renderExplosion
 }
