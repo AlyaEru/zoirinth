@@ -7,7 +7,9 @@ const constants = {
 	laySuperpodProb: 0.0001,
 	layCloverProb: 0.001,
 	escapeTrapProb: 0.2,
-	createTrapProb: 0.5
+	createTrapProb: 0.5,
+	hyperspaceCost: 200,
+	hyperblastCost: 500
 }
 
 module.exports = {

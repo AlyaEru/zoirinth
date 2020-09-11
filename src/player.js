@@ -55,8 +55,22 @@ function spendPoints(points) {
 	return false
 }
 
+function hyperspace(map) {
+	if (spendPoints(constants.hyperspaceCost)) {
+		let x, y
+		while (true) {
+			x = Math.floor(Math.random() * (map.width * 2 + 1))
+			y = Math.floor(Math.random() * (map.height * 2 + 1))
+			if (map.maze[y][x] === 'space') {
+				break
+			}
+		}
+		player.loc = {x, y}
+	}
+}
+
 function hyperblast(map) {
-	if (spendPoints(500)) {
+	if (spendPoints(constants.hyperblastCost)) {
 		const radius = 5
 		let locs = []
 		for (let x = -radius; x <= radius; x++) {
@@ -179,6 +193,11 @@ function playerEvent(map, event) {
 		case 'KeyH':
 			player.actionQueue.push(() => {
 				hyperblast(map)
+			})
+			break
+		case 'KeyT':
+			player.actionQueue.push(() => {
+				hyperspace(map)
 			})
 			break
 		default:
