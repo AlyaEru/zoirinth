@@ -10,7 +10,6 @@ function make() {
 				let action = this._queue[0]
 				this._queue = this._queue.slice(1)
 				if ((await action()) === this.skip) {
-					console.log('skipping')
 					await this.doAction()
 				}
 			}

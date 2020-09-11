@@ -36,8 +36,6 @@ function renderGameboard(maze) {
 			for (j = 0; j < classes.length; j++) {
 				if (!classes[j].includes('explode')) {
 					classes[j] = ''
-				} else {
-					console.log(classes[j])
 				}
 			}
 

@@ -87,7 +87,6 @@ function hyperblast(map) {
 		}
 
 		for (let loc of locs) {
-			console.log({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
 			map.explode({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
 		}
 	}

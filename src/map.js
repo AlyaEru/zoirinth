@@ -90,7 +90,6 @@ function createMap(width, height, gameStats) {
 
 	const ratioWeakWalls = 1 - ((level - 1) % 5) / 4
 	const windiness = Math.random()
-	console.log(windiness)
 	map.maze = buildMaze.build(width, height, ratioWeakWalls, windiness)
 
 	takenPoints = []
