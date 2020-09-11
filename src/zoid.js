@@ -2,6 +2,7 @@ const util = require('./utilities')
 const dirs = require('./directions')
 const playerSystem = require('./player')
 const actionQueueSystem = require('./actionQueue')
+const {constants} = require('./gameConstants')
 
 const zoidModes = ['random', 'agressive']
 
@@ -17,7 +18,7 @@ function randMode(gameStats) {
 	const aggressiveProb = gameStats.level < 5 ? gameStats.level * 0.02 : 0.1
 	const chaseProb = gameStats.level < 5 ? gameStats.level * 0.02 : 0.1
 	if (rand < aggressiveProb) {
-		return 'aggressive'
+		return 'agressive'
 	} else if (rand < aggressiveProb + chaseProb) {
 		return 'chase'
 	} else if (rand < aggressiveProb + chaseProb + 0.4) {
@@ -56,9 +57,22 @@ function make(map) {
 		return 'zoid'
 	}
 
+	zoid.shot = map => shot(zoid, map)
+
 	zoid.addAction = addAction(map, zoid)
 	map.entities.zoids.push(zoid)
 	return zoid
+}
+
+function shot(zoid, map) {
+	if (zoid.clovers > 0) {
+		if (Math.random() < constants.killZoidCloverProb) {
+			zoid.clovers-- //TODO: make more complex
+			map.entities.players[0].clovers++
+		}
+	} else {
+		map.removeEntity('zoids', zoid.loc)
+	}
 }
 
 // Returns a function that adds an action to the zoid's actionQueue

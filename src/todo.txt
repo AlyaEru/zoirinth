@@ -1,15 +1,10 @@
 add randomness
-- maze windyness
-- chance of destroying wall
-- chance of killing clover in zoid
 - random wait before portal spawn
 
 shield mode should stay on per level
 Or, shield mode shouldn't start the game
 
 I think zoids are supposed to push traps
-
-hyperspace (random teleport)
 
 invisible mode
 

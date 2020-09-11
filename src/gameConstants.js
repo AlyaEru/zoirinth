@@ -9,7 +9,9 @@ const constants = {
 	escapeTrapProb: 0.2,
 	createTrapProb: 0.5,
 	hyperspaceCost: 200,
-	hyperblastCost: 500
+	hyperblastCost: 500,
+	destroyWallProb: 0.33,
+	killZoidCloverProb: 0.5
 }
 
 module.exports = {

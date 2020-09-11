@@ -4,7 +4,8 @@ const dir = require('./directions')
 let width, height
 let straightness = 0.5
 
-function buildMaze(w, h, ratioWeak) {
+function buildMaze(w, h, ratioWeak, windiness) {
+	if (windiness) straightness = 1 - windiness
 	width = w
 	height = h
 	return setWalls(convertMaze(createMaze()), ratioWeak)

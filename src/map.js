@@ -88,7 +88,10 @@ function createMap(width, height, gameStats) {
 		zoids: level + 2
 	}
 
-	map.maze = buildMaze.build(width, height, 1 - ((level - 1) % 5) / 4)
+	const ratioWeakWalls = 1 - ((level - 1) % 5) / 4
+	const windiness = Math.random()
+	console.log(windiness)
+	map.maze = buildMaze.build(width, height, ratioWeakWalls, windiness)
 
 	takenPoints = []
 
@@ -400,12 +403,7 @@ function handleEntityMove(map, entity, loc) {
 				let zoid = map.entities.zoids.filter(
 					zoid => zoid.loc.x === loc.x && zoid.loc.y === loc.y
 				)[0]
-				if (zoid.clovers > 0) {
-					zoid.clovers-- //TODO: make more complex
-					map.entities.players[0].clovers++
-				} else {
-					removeEntity(map, 'zoids', zoid.loc)
-				}
+				zoid.shot(map)
 				break
 			case 'mine':
 				let mine = map.entities.mines.filter(
@@ -433,8 +431,11 @@ function handleEntityMove(map, entity, loc) {
 				break
 			default:
 				if (isShootableWall(map, loc)) {
-					map.maze[loc.y][loc.x] = 'space'
+					if (Math.random() < constants.destroyWallProb) {
+						map.maze[loc.y][loc.x] = 'space'
+					}
 				}
+				break
 		}
 	}
 	return false
