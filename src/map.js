@@ -268,6 +268,8 @@ function zoidDrop(map, loc) {
 	} else if (randNum < keepTotal(constants.layCloverProb * zoid.clovers)) {
 		cloverSystem.drop(map, loc)
 		zoid.clovers--
+	} else if (randNum < keepTotal(constants.laySuperpodProb)) {
+		map.maze[loc.y][loc.x] = 'superpod'
 	} else {
 		map.maze[loc.y][loc.x] = 'pod'
 	}
@@ -283,6 +285,11 @@ function handleEntityMove(map, entity, loc) {
 				return true
 			case 'pod':
 				player.score += 1
+				map.maze[loc.y][loc.x] = 'space'
+				player.loc = loc
+				return true
+			case 'superpod':
+				player.score += 500
 				map.maze[loc.y][loc.x] = 'space'
 				player.loc = loc
 				return true
@@ -325,7 +332,7 @@ function handleEntityMove(map, entity, loc) {
 							removeEntity(map, 'clovers', nextSpace)
 							player.clovers++
 						}
-						map[nexSpace.x][nextSpace.y] = 'space'
+						map.maze[nextSpace.y][nextSpace.x] = 'space'
 						mine.loc = dirs.locAt(mine.loc, dir)
 						player.loc = loc
 						return true
@@ -352,6 +359,7 @@ function handleEntityMove(map, entity, loc) {
 		switch (itemAt(map, loc)) {
 			case 'space':
 			case 'pod':
+			case 'superpod':
 				map.maze[loc.y][loc.x] = 'space'
 				zoidDrop(map, zoid.loc)
 				zoid.loc = loc
@@ -373,6 +381,7 @@ function handleEntityMove(map, entity, loc) {
 				zap.loc = loc
 				return true
 			case 'pod':
+			case 'superpod':
 				map.maze[loc.y][loc.x] = 'space'
 				zap.loc = loc
 				return true
