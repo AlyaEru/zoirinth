@@ -263,7 +263,9 @@ function zoidDrop(map, loc) {
 
 	if (randNum < keepTotal(constants.layZoidroneProb)) {
 		zoidroneSystem.drop(map, loc)
-	} else if (randNum < keepTotal(constants.layMineProb)) {
+	} else if (
+		randNum < keepTotal(constants.layMineProb * (map.gameStats.level - 1))
+	) {
 		mineSystem.drop(map, loc)
 	} else if (randNum < keepTotal(constants.layCloverProb * zoid.clovers)) {
 		cloverSystem.drop(map, loc)

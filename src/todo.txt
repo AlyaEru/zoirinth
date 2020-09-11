@@ -7,13 +7,12 @@ add randomness
 - randomly spawn superpods
 
 shield mode should stay on per level
+Or, shield mode shouldn't start the game
 
 mines
 - number of mine spawns should increase per level (no mines level 1)
 
 I think zoids are supposed to push traps
-
-add superpods
 
 hyperspace (random teleport)
 
