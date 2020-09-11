@@ -12,16 +12,18 @@ function randSpawn(map) {
 	return zoid
 }
 
-function randMode() {
+function randMode(gameStats) {
 	const rand = Math.random()
-	if (rand < 0.4) {
-		return 'random'
-	} else if (rand < 0.8) {
-		return 'explorer'
-	} else if (rand < 0.9) {
-		return 'agressive'
-	} else {
+	const aggressiveProb = gameStats.level < 5 ? gameStats.level * 0.02 : 0.1
+	const chaseProb = gameStats.level < 5 ? gameStats.level * 0.02 : 0.1
+	if (rand < aggressiveProb) {
+		return 'aggressive'
+	} else if (rand < aggressiveProb + chaseProb) {
 		return 'chase'
+	} else if (rand < aggressiveProb + chaseProb + 0.4) {
+		return 'explorer'
+	} else {
+		return 'random'
 	}
 }
 
@@ -80,14 +82,14 @@ function addAction(map, zoid) {
 					})
 				}
 				if (Math.random() < 0.1) {
-					zoid.mode = randMode()
+					zoid.mode = randMode(map.gameStats)
 				}
 				break
 			case 'stuck':
 				zoid.actionQueue.push(async function() {
 					await map.shoot(zoid, util.randElem(dirs.dirs))
 				})
-				zoid.mode = randMode()
+				zoid.mode = randMode(map.gameStats)
 				break
 			case 'agressive':
 				let player = playerSystem.getPlayer()
@@ -107,7 +109,7 @@ function addAction(map, zoid) {
 					})
 				}
 				if (Math.random() < 0.3) {
-					zoid.mode = randMode()
+					zoid.mode = randMode(map.gameStats)
 				}
 				break
 			case 'explorer': {
@@ -134,7 +136,7 @@ function addAction(map, zoid) {
 					})
 				}
 				if (Math.random() < 0.1) {
-					zoid.mode = randMode()
+					zoid.mode = randMode(map.gameStats)
 				}
 				break
 			}
@@ -155,7 +157,7 @@ function addAction(map, zoid) {
 				if (shortestSteps === Infinity) {
 					zoid.mode = 'random'
 				} else if (Math.random() < 0.1) {
-					zoid.mode = randMode()
+					zoid.mode = randMode(map.gameStats)
 				}
 				zoid.actionQueue.push(() => {
 					zoid.runMode = false
