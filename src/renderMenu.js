@@ -14,8 +14,41 @@ function renderLevel(level) {
 	$('#level').text('Level: ' + level)
 }
 
+function renderModalWelcome() {
+	
+	let content=`
+		<li>&nbsp;_____&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp; </li>
+		<li>|__&nbsp;&nbsp;&nbsp;|___|_|___|_|___| |_| |_&nbsp;</li>
+		<li>|&nbsp;&nbsp;&nbsp;__| . | |&nbsp;&nbsp;_| |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;_|&nbsp;&nbsp;&nbsp;|</li>
+		<li>|_____|___|_|_| |_|_|_|_| |_|_|</li>
+		<li>&nbsp; </li>
+		<li>Play: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="white-text">Enter</span></li>
+		<li>How to play: &nbsp;&nbsp;&nbsp;<span class="white-text">H</span></li>
+		<li>Highscores: &nbsp;&nbsp;&nbsp;&nbsp;<span class="white-text">S</span></li>
+		<li>&nbsp; </li>`
+	
+	$('#modal').setClass('show')
+	$('#modal ul').html(content)
+	alert("got here")
+}
+
+function renderModalHowto() {
+	
+	
+	
+}
+
+function renderModalHighscores(highscores) {
+	
+	
+	
+}
+
 module.exports = {
 	renderScore,
 	renderLevel,
-	renderPlayerInfo
+	renderPlayerInfo,
+	renderModalWelcome,
+	renderModalHowto,
+	renderModalHighscores
 }

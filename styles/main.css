@@ -7,7 +7,8 @@
 }
 
 body{background-color:black;font:26px gameFont;color:#ff860d;margin:0;padding:0;}
-
+.white-text{color:#fff;}
+.red-text{color:#ff602a;}
 
 main{
 	position:fixed;
@@ -16,8 +17,10 @@ main{
 	top:0;
 	bottom:0;
 	background-color:rgba(0,0,0,.5);
-	text-align:center;
 	
+	display:flex;
+	align-items: center;
+	justify-content: center;
 }
 
 
@@ -61,6 +64,20 @@ div#main, div#menu{
 	top:0;
 }
 
+#left-menu li.menu-item:before{
+	content:attr(data-hotkey);
+	position:absolute;
+	right:0;
+	color:#eee;
+}
+
+
+#left-menu li.menu-item:hover{
+
+	cursor:pointer;
+	text-decoration:underline;
+}
+
 li.off:after{
 	color:#ff602a;
 	content: " off";
@@ -70,24 +87,7 @@ li.on:after{
 	content: " on";
 }
 
-li#runMode:before{
-	position:absolute;
-	right:0;
-	color:#eee;
-	content: "R";
-}
-li#shield:before{
-	position:absolute;
-	right:0;
-	color:#eee;
-	content: "Q";
-}
-li#invisibility:before{
-	position:absolute;
-	right:0;
-	color:#eee;
-	content: "I";
-}
+
 
 
 
@@ -101,8 +101,10 @@ li#invisibility:before{
 	bottom:0;
 	background-color:rgba(0,0,0,.5);
 	text-align:center;
-	
 	display:none;
+	
+	align-items: center;
+	justify-content: center;
 }
 
 
@@ -117,7 +119,7 @@ li#invisibility:before{
 
 
 #modals div.show{
-	display:block;
+	display:flex;
 }
 
 
