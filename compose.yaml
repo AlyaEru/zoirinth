@@ -1,0 +1,35 @@
+services:
+  # Frontend service
+  zoirinth-frontend:
+    image: node:18-alpine
+    volumes:
+      - ./zoirinth:/app
+      - /app/node_modules
+    working_dir: /app
+    command: |
+      sh -c "
+        cd /app &&
+        npm install &&
+        npm run build
+      "
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  # API service for highscores
+  zoirinth-api:
+    image: node:18-alpine
+    volumes:
+      - ./highscores:/app/highscores
+    working_dir: /app
+    command: |
+      sh -c "
+        cd /app &&
+        npm install express fs &&
+        node server.js
+      "
+    ports:
+      - "3001:3001"
+    expose:
+      - "3001"
