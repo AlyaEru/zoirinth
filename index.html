@@ -1,6 +1,7 @@
 <html>
 
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<link rel="stylesheet" href="styles/main.css">
 	<script src="dist/bundle.js" defer></script>
 	<link rel="icon" type="image/png" href="favicon.png">
@@ -9,28 +10,24 @@
 <body>
 	<main>
 		<div>
-			<div id="menu">
-					<ul id="left-menu">
-						<li>&nbsp;_____&nbsp;&nbsp;___&nbsp;&nbsp;___&nbsp;&nbsp;_ _   </li>
-						<li>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|| -_||&nbsp;&nbsp;&nbsp;|| | |  </li>
-						<li>|_|_|_||___||_|_||___|</li>
-						<li>&nbsp; </li>
-						<li data-hotkey="R" class="menu-item on">Run Mode</li>
-						<li data-hotkey="Q" class="menu-item off">Shield</li>
-						<li data-hotkey="I"  class="menu-item off">Invisibility</li>
-						<li data-hotkey="H"  class="menu-item">Hyperspace</li>
-						<li data-hotkey="T"  class="menu-item">Superblast</li>
-						<li data-hotkey="Space"  class="menu-item">Fire at zoid</li>
-						<li>&nbsp; </li>
-						<li data-hotkey="Enter" class="menu-item">Pause</li>
-					</ul>
-			</div>
 			<div id="main">
 				<ul id="top-menu">
 					<li id="level">Level: 1</li>
 					<li id="points">Points: 10</li>
 				</ul>
 				<table id="gameboard"></table>
+			</div>
+			<div id="menu">
+					<ul id="left-menu">
+						<li data-hotkey="R" id="runmode" class="menu-item on">Run Mode</li>
+						<li data-hotkey="Q" id="shield" class="menu-item off">Shield</li>
+						<li data-hotkey="I" id="invisibility" class="menu-item off">Invisibility</li>
+						<li data-hotkey="H"  class="menu-item">Hyperspace</li>
+						<li data-hotkey="T"  class="menu-item">Superblast</li>
+						<li data-hotkey="Space"  class="menu-item">Fire at zoid</li>
+						<li>&nbsp; </li>
+						<li data-hotkey="Enter" class="menu-item">Pause</li>
+					</ul>
 			</div>
 		</div>
 	</main>
@@ -40,26 +37,6 @@
 			<ul>
 			</ul>
 		</div>
-		
-		<div id="modal-gameover" class="">
-			<ul>
-				<li>&nbsp; </li>
-				<li>&nbsp;___ ___ _____ ___&nbsp;&nbsp;&nbsp;&nbsp;___ _ _ ___ ___&nbsp;</li>
-				<li>| . | . |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| -_|&nbsp;&nbsp;| . | | | -_|&nbsp;&nbsp;_|</li>
-				<li>|_&nbsp;&nbsp;|__,|_|_|_|___|&nbsp;&nbsp;|___|__/|___|_|&nbsp;&nbsp;</li>
-				<li>|___|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-				<li>&nbsp; </li>
-			</ul>
-		</div>
-		
-		<div id="modal-gameover" class="">
-			<ul>
-				<li>Highscores: </li>
-				<li>&nbsp; </li>
-				<li>Press Enter</li>
-			</ul>
-		</div>
-		
 	</div>
 	
 	

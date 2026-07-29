@@ -48,7 +48,7 @@ async function levelLoop(map, player, level) {
 	let nextZoid = entityIterator(map.entities.zoids)
 	let nextZoidrone = entityIterator(map.entities.zoidrones)
 	while (!player.escaped && !player.dead) {
-		if (!player.menu && !player.awaitBegin) {
+		if (!player.menu && !player.awaitBegin && !$('#modal').hasClass('show')) {
 			await player.actionQueue.doAction()
 			let zoid = nextZoid()
 			if (zoid) {
