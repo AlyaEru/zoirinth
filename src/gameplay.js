@@ -1,6 +1,7 @@
 const mapSystem = require('./map')
 const renderMap = require('./renderMap')
 const renderMenu = require('./renderMenu')
+const highscores = require('./highscores')
 const playerSystem = require('./player')
 const util = require('./utilities')
 
@@ -33,7 +34,8 @@ async function manageGame(width, height) {
 		died = await manageLevel(width, height, gameStats)
 	}
 
-	// High scores?
+	await util.wait(1000)
+	renderMenu.renderModalGameover()
 }
 
 async function manageLevel(width, height, gameStats) {
