@@ -1,11 +1,25 @@
+make sure shield mode can't turn on at 0 points
+add additional quick menu items during pause for shooting "Unpause and shoot" "Arrow"
+Pause/unpause toggle text based on game state
+touchscreen mode arrows and clickable list items and ability to swap menu for left/right handedness 
+track game play time and add to highscores data
+
+
 add randomness
 - random wait before portal spawn
 
 shield mode should stay on per level
+
 Or, shield mode shouldn't start the game
 
-I think zoids are supposed to push traps
+I think zoids are supposed to push traps - this is confirmed by daddy
 
 invisible mode
 
 black holes
+
+
+Conversation with daddy:
+Zoids can push traps, not mines
+player can push mines with shields on
+zoids will randomly drop clovers
