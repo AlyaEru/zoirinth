@@ -12,6 +12,21 @@ async function manageGame(width, height) {
 		score: 10
 	}
 	let died = false
+
+	$(document)
+		.off('keydown')
+		.on('keydown', event => {
+			if (died) {
+				highscores.highscoresNameInput(event, gameStats)
+			} else if ($('#modal').hasClass('show')) {
+				renderMenu.modalEvent(event)
+			} else {
+				playerSystem.playerEvent(event)
+			}
+		})
+
+	renderMenu.renderModalWelcome()
+
 	while (!died) {
 		gameStats.level++
 		renderMenu.renderLevel(gameStats.level)

@@ -18,7 +18,8 @@ function createPlayer(map) {
 		type: 'player',
 		menu: false,
 		awaitBegin: true,
-		trapped: false
+		trapped: false,
+		map: map
 	}
 
 	player.getClass = () => {
@@ -35,12 +36,6 @@ function createPlayer(map) {
 		}
 	}
 
-	$(document)
-		.off('keydown')
-		.on('keydown', event => {
-			playerEvent(map, event)
-		})
-
 	map.spawnEntity(player)
 
 	return player
@@ -55,13 +50,13 @@ function spendPoints(points) {
 	return false
 }
 
-function hyperspace(map) {
+function hyperspace() {
 	if (spendPoints(constants.hyperspaceCost)) {
 		let x, y
 		while (true) {
-			x = Math.floor(Math.random() * (map.width * 2 + 1))
-			y = Math.floor(Math.random() * (map.height * 2 + 1))
-			if (map.maze[y][x] === 'space') {
+			x = Math.floor(Math.random() * (player.map.width * 2 + 1))
+			y = Math.floor(Math.random() * (player.map.height * 2 + 1))
+			if (player.map.maze[y][x] === 'space') {
 				break
 			}
 		}
@@ -69,7 +64,7 @@ function hyperspace(map) {
 	}
 }
 
-function hyperblast(map) {
+function hyperblast() {
 	if (spendPoints(constants.hyperblastCost)) {
 		const radius = 5
 		let locs = []
@@ -87,32 +82,32 @@ function hyperblast(map) {
 		}
 
 		for (let loc of locs) {
-			map.explode({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
+			player.map.explode({x: player.loc.x + loc.x, y: player.loc.y + loc.y})
 		}
 	}
 }
 
-function playerShoot(map, dir) {
+function playerShoot(dir) {
 	if (spendPoints(10)) {
 		player.actionQueue.push(async function() {
-			await map.shoot(player, dir)
+			await player.map.shoot(player, dir)
 		})
 		player.menu = false
 	}
 }
 
-function shootNearestZoid(map) {
+function shootNearestZoid() {
 	//It needs to evaluate nearest zoid in the queue, not before adding to the queue. And cancel actions if dir is false.
 	player.actionQueue.push(async function() {
 		//find nearest zoid (if there is one)
-		let dir = map.dirOfNearestEntity(player, 'zoid')
+		let dir = player.map.dirOfNearestEntity(player, 'zoid')
 		if (dir && spendPoints(10)) {
-			await map.shoot(player, dir)
+			await player.map.shoot(player, dir)
 		} else return player.actionQueue.skip
 	})
 }
 
-function playerEvent(map, event) {
+function playerEvent(event) {
 	player.awaitBegin = false
 
 	if (player.trapped) {
@@ -133,19 +128,19 @@ function playerEvent(map, event) {
 		switch (event.code) {
 			case 'ArrowDown':
 			case 'KeyS':
-				playerShoot(map, 'd')
+				playerShoot('d')
 				break
 			case 'ArrowUp':
 			case 'KeyW':
-				playerShoot(map, 'u')
+				playerShoot('u')
 				break
 			case 'ArrowLeft':
 			case 'KeyA':
-				playerShoot(map, 'l')
+				playerShoot('l')
 				break
 			case 'ArrowRight':
 			case 'KeyD':
-				playerShoot(map, 'r')
+				playerShoot('r')
 				break
 		}
 	} else {
@@ -153,29 +148,29 @@ function playerEvent(map, event) {
 			case 'ArrowDown':
 			case 'KeyS':
 				player.actionQueue.push(() => {
-					map.moveEntity(player, 'd')
+					player.map.moveEntity(player, 'd')
 				})
 				break
 			case 'ArrowUp':
 			case 'KeyW':
 				player.actionQueue.push(() => {
-					map.moveEntity(player, 'u')
+					player.map.moveEntity(player, 'u')
 				})
 				break
 			case 'ArrowLeft':
 			case 'KeyA':
 				player.actionQueue.push(() => {
-					map.moveEntity(player, 'l')
+					player.map.moveEntity(player, 'l')
 				})
 				break
 			case 'ArrowRight':
 			case 'KeyD':
 				player.actionQueue.push(() => {
-					map.moveEntity(player, 'r')
+					player.map.moveEntity(player, 'r')
 				})
 				break
 			case 'Space':
-				shootNearestZoid(map)
+				shootNearestZoid()
 				break
 		}
 	}
@@ -191,12 +186,12 @@ function playerEvent(map, event) {
 			break
 		case 'KeyH':
 			player.actionQueue.push(() => {
-				hyperblast(map)
+				hyperblast()
 			})
 			break
 		case 'KeyT':
 			player.actionQueue.push(() => {
-				hyperspace(map)
+				hyperspace()
 			})
 			break
 		default:
@@ -207,5 +202,6 @@ function playerEvent(map, event) {
 module.exports = {
 	createPlayer,
 	getPlayer,
+	playerEvent,
 	spendPoints
 }

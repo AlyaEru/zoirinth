@@ -1,4 +1,6 @@
 const constants = {
+	gameboardWidth: 18,
+	gameboardHeight: 12,
 	mineExplodeProb: 0.0001,
 	zoidroneWakingProb: 0.0007,
 	zoidroneTransformProb: 0.02,
