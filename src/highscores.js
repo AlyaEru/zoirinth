@@ -2,6 +2,9 @@ const constants = require('./gameConstants').constants
 const gameplay = require('./gameplay')
 const renderMenu = require('./renderMenu')
 
+// Server URL configuration
+const SERVER_URL = 'https://zoirinth.schwabtogether.com'
+
 let _username = ''
 
 function addScore(username, gameStats) {
@@ -15,7 +18,7 @@ function addScore(username, gameStats) {
 	}
 
 	// Send score to server using fetch
-	fetch('https://zoirinth.schwabtogether.com/addScore', {
+	fetch(`${SERVER_URL}/addScore`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -40,7 +43,7 @@ function getScores() {
 	const table = $('#highscores')
 
 	// Fetch scores from server
-	fetch('https://zoirinth.schwabtogether.com/getScores')
+	fetch(`${SERVER_URL}/getScores`)
 		.then(response => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok')
