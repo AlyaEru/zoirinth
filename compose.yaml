@@ -3,7 +3,7 @@ services:
   zoirinth-frontend:
     image: node:18-alpine
     volumes:
-      - ./zoirinth:/app
+      - ./frontend:/app
       - /app/node_modules
     working_dir: /app
     command: |
@@ -21,6 +21,7 @@ services:
   zoirinth-api:
     image: node:18-alpine
     volumes:
+      - ./backend:/app
       - ./highscores:/app/highscores
     working_dir: /app
     command: |
