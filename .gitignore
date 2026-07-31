@@ -1,7 +1,7 @@
 # Custom
 *.DS_STORE
 frontend/public/dist/*
-
+/highscores
 
 
 # Logs
