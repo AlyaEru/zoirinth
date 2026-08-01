@@ -1,6 +1,3 @@
-const constants = require('./gameConstants').constants
-const gameplay = require('./gameplay')
-
 // Server URL configuration
 const SERVER_URL = 'https://zoirinth.schwabtogether.com'
 
@@ -92,7 +89,8 @@ function highscoresNameInput(event, gameStats) {
 	// Handle alphanumeric characters (with shift for capital letters)
 	if (
 		(event.code >= 'KeyA' && event.code <= 'KeyZ') ||
-		(event.code >= 'Digit0' && event.code <= 'Digit9')
+		(event.code >= 'Digit0' && event.code <= 'Digit9') ||
+		(event.code === 'space')
 	) {
 		// Check for char limit
 		if (_username.length >= 20) {
@@ -121,13 +119,13 @@ function highscoresNameInput(event, gameStats) {
 	}
 	// Handle enter key to submit
 	else if (event.code === 'Enter') {
-		// Submit the name (in a real implementation, this would send to server)
 		if (_username.trim() !== '') {
 			// Submit score
 			addScore(_username, gameStats)
-			gameplay.manageGame(constants.gameboardWidth, constants.gameboardHeight)
+			return true
 		}
 	}
+	return false
 }
 
 module.exports = {
