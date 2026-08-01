@@ -119,6 +119,7 @@ span.cursorblink {
 	
 	align-items: center;
 	justify-content: center;
+	overflow: auto;
 }
 
 
@@ -138,6 +139,26 @@ span.cursorblink {
 	display:flex;
 }
 
+
+/* highscores */
+
+table#highscores {
+	width: 80vw;
+	max-width: 30em;
+	border:none;
+	border-spacing:0;
+	padding:0;
+	margin:auto;
+	font:26px gameFont;
+}
+table#highscores th {
+	padding: .5em;
+	text-align: left;
+}
+table#highscores td {
+	padding: .5em;
+	border-top: 1px solid #ff860d;
+}
 
 
 /* gameboard */
