@@ -71,7 +71,7 @@ function renderModalHighscores() {
 	$('#modal').addClass('show')
 
 	// Load scores
-	highscores.getScores()
+	getScores()
 }
 
 function renderModalGameover() {
