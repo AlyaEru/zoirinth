@@ -10,7 +10,8 @@ services:
       sh -c "
         cd /app &&
         npm install &&
-        npm run build
+        npm run build &&
+        npx http-server -p 3000 -a 0.0.0.0 public
       "
     ports:
       - "3000:3000"
@@ -32,3 +33,5 @@ services:
       "
     ports:
       - "3001:3001"
+    expose:
+      - "3001"
