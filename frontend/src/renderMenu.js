@@ -2,6 +2,37 @@ const util = require('./utilities')
 const getScores = require('./highscores').getScores
 
 function renderPlayerInfo(player) {
+	// Initialize menu items if they don't exist
+	let content = ""
+	if (($('#left-menu').length <= 1) || (player.menu != $('#left-menu').hasClass('extended'))) {
+		content = `
+			<li data-hotkey="R" id="runmode" class="menu-item on">Run Mode</li>
+			<li data-hotkey="Q" id="shield" class="menu-item off">Shield</li>
+			<li data-hotkey="I" id="invisibility" class="menu-item off">Invisibility</li>
+			<li data-hotkey="H"  class="menu-item">Hyperspace</li>
+			<li data-hotkey="T"  class="menu-item">Superblast</li>
+			<li data-hotkey="Space"  class="menu-item">Fire at zoid</li>
+			<li>&nbsp; </li>
+		`;
+		if (player.menu) {
+			$('#left-menu').addClass('extended')
+			content += `
+				<li data-hotkey="Left" class="menu-item">Shoot Left</li>
+				<li data-hotkey="Right" class="menu-item">Shoot Right</li>
+				<li data-hotkey="Up" class="menu-item">Shoot Up</li>
+				<li data-hotkey="Down" class="menu-item">Shoot Down</li>
+				<li>&nbsp; </li>
+				<li data-hotkey="Enter" class="menu-item">Unpause</li>
+			`
+		} else {
+			$('#left-menu').removeClass('extended')
+			content += `
+				<li data-hotkey="Enter" class="menu-item">Pause</li>
+			`
+		}
+		$('#left-menu').html(content);
+	}
+	
 	if (player.runMode != $('#runmode').hasClass('on'))
 		$('#runmode').toggleClass('on off')
 	if (player.shield != $('#shield').hasClass('on'))
