@@ -92,12 +92,12 @@ async function levelLoop(map, player, level) {
 			renderMenu.renderScore(player.score)
 			renderMenu.renderLevel(level)
 		}
-
+		
 		renderMenu.renderPlayerInfo(player)
 		await util.wait(clockSpeed)
 	}
 }
 
 module.exports = {
-	manageGame: manageGame
+	manageGame
 }
