@@ -23,7 +23,6 @@ services:
     image: node:18-alpine
     volumes:
       - ./backend:/app
-      - ./highscores:/app/highscores
     working_dir: /app
     command: |
       sh -c "

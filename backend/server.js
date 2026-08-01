@@ -18,40 +18,57 @@ process.on('SIGINT', () => {
 app.use(express.json());
 app.use(express.static('public'));
 
+let highscores = [];
+let isDirty = false; // Flag to track if data needs to be written to disk
+
+// Load existing scores on startup
+const highscoresPath = path.join(__dirname, 'highscores');
+fs.readFile(highscoresPath, 'utf8', (err, data) => {
+  if (err && err.code === 'ENOENT') {
+    highscores = [];
+  } else if (err) {
+    console.error('Error reading highscores:', err);
+    highscores = [];
+  } else {
+    try {
+      highscores = JSON.parse(data);
+    } catch (parseErr) {
+      highscores = [];
+    }
+  }
+});
+
 // GET /api/getScores - retrieve highscores
 app.get('/api/getScores', (req, res) => {
-  const highscoresPath = path.join(__dirname, 'highscores')
-  fs.readFile(highscoresPath, 'utf8', (err, data) => {
-    if (err) {
-      // If file doesn't exist, return empty array
-      if (err.code === 'ENOENT') {
-        res.send('[]')
-        return
-      }
-      res.status(500).send('Error reading highscores')
-      return
-    }
-    res.send(data)
-  })
-})
+  res.json(highscores); // Return in-memory array directly
+});
 
 // POST /api/addScore - add new highscore
 app.post('/api/addScore', (req, res) => {
-  const {username, score, level, date} = req.body
+  const {username, score, level, date} = req.body;
   if (!username || !score || !level || !date) {
-    res.status(400).send('All fields required')
-    return
+    res.status(400).send('All fields required');
+    return;
   }
-  const highscoresPath = path.join(__dirname, 'highscores')
-  const highscoreEntry = JSON.stringify({username, score, level, date}) + '\n'
-  fs.appendFile(highscoresPath, highscoreEntry, err => {
-    if (err) {
-      res.status(500).send('Error writing highscore')
-      return
-    }
-    res.send('Highscore saved')
-  })
-})
+  
+  // Add new score to in-memory array
+  highscores.push({username, score, level, date});
+  isDirty = true; // Mark that data needs to be saved
+  
+  // Save to disk asynchronously (non-blocking)
+  if (isDirty) {
+    fs.writeFile(highscoresPath, JSON.stringify(highscores, null, 2), (writeErr) => {
+      if (writeErr) {
+        console.error('Error saving highscore:', writeErr);
+        // Don't send error response here as we already sent success
+      } else {
+        isDirty = false; // Reset flag after successful save
+      }
+    });
+  }
+  
+  res.send('Highscore saved');
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
