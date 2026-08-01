@@ -12,6 +12,11 @@ app.get('/highscores', (req, res) => {
   const highscoresPath = path.join(__dirname, 'highscores')
   fs.readFile(highscoresPath, 'utf8', (err, data) => {
     if (err) {
+      // If file doesn't exist, return empty array
+      if (err.code === 'ENOENT') {
+        res.send('[]')
+        return
+      }
       res.status(500).send('Error reading highscores')
       return
     }
