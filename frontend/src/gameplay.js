@@ -19,7 +19,7 @@ async function manageGame(width, height) {
 		.on('keydown', event => {
 			if (died) {
 				if (highscores.highscoresNameInput(event, gameStats)) {
-					gameplay.manageGame(width, height)
+					manageGame(width, height)
 				}
 			} else if ($('#modal').hasClass('show')) {
 				renderMenu.modalEvent(event)

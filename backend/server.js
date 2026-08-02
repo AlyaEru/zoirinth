@@ -106,7 +106,7 @@ app.post('/api/addScore', (req, res) => {
     });
   }
   
-  res.send('Highscore saved');
+  res.json({ message: 'Highscore saved' });
 });
 
 app.listen(PORT, () => {
