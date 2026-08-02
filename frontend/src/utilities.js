@@ -37,9 +37,9 @@ function readableTime(ms) {
   const hours = Math.floor((ms  / 1000 / 3600 ) % 24)
 
   const readable = [
-    pad(hours.toString(), 2),
-    pad(minutes.toString(), 2),
-    pad(seconds.toString(), 2),
+    hours.toString().padStart(2, "0"),
+    minutes.toString().padStart(2, "0"),
+    seconds.toString().padStart(2, "0")
   ].join(':');
 
   return readable;
