@@ -87,7 +87,7 @@ app.post('/api/addScore', (req, res) => {
   }
   
   // Add new score to in-memory array
-  highscores.push({username, score, level, date});
+  highscores.push({username, score, level, time, date});
   
   // Keep only top scores
   highscores = keepTopScores(highscores);
