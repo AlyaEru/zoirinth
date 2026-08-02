@@ -1,4 +1,3 @@
-const util = require('./utilities')
 const getScores = require('./highscores').getScores
 
 function renderPlayerInfo(player) {
@@ -85,11 +84,12 @@ function renderModalHighscores() {
                     <th>Name</th>
                     <th>Score</th>
                     <th>Level</th>
+                    <th>Time</th>
                     <th>Date</th>
                 </tr>
             </thead>
             <tbody>
-                <tr><td colspan="5">Loading...</td></tr>
+                <tr><td colspan="6">Loading...</td></tr>
             </tbody>
         </table></li>
         <li>&nbsp; </li>

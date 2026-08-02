@@ -1,3 +1,5 @@
+const util = require('./utilities')
+
 // Server URL configuration
 const SERVER_URL = 'https://zoirinth.schwabtogether.com'
 
@@ -9,7 +11,7 @@ function addScore(username, gameStats) {
 		username: username,
 		score: gameStats.score,
 		level: gameStats.level,
-		//time: gameStats.time,
+		time: gameStats.time,
 		date: new Date().toISOString()
 	}
 
@@ -47,8 +49,8 @@ function getScores() {
 			return response.json()
 		})
 		.then(scores => {
-			// Sort scores by score (descending) and limit to top 10
-			const topScores = scores.sort((a, b) => b.score - a.score).slice(0, 10)
+			// Sort scores by score (descending) and level (descending) and limit to top 10
+			const topScores = scores.sort((a, b) => b.score - a.score).sort((a, b) => b.level - a.level).slice(0, 10)
 
 			// Clear existing table rows
 			table.empty()
@@ -59,6 +61,7 @@ function getScores() {
 			headerRow.append('<th>Name</th>')
 			headerRow.append('<th>Score</th>')
 			headerRow.append('<th>Level</th>')
+			headerRow.append('<th>Time</th>')
 			headerRow.append('<th>Date</th>')
 			table.append(headerRow)
 
@@ -69,6 +72,7 @@ function getScores() {
 				row.append(`<td>${score.username}</td>`)
 				row.append(`<td>${score.score}</td>`)
 				row.append(`<td>${score.level}</td>`)
+				row.append(`<td>${util.readableTime(score.time)}</td>`)
 				row.append(`<td>${new Date(score.date).toLocaleDateString()}</td>`)
 				table.append(row)
 			})
@@ -76,7 +80,7 @@ function getScores() {
 		.catch(error => {
 			console.error('Error getting scores:', error)
 			// Show error in table
-			table.html('<tr><td colspan="5">Failed to load scores</td></tr>')
+			table.html('<tr><td colspan="6">Failed to load scores</td></tr>')
 		})
 }
 

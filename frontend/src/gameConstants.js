@@ -13,7 +13,9 @@ const constants = {
 	hyperspaceCost: 200,
 	hyperblastCost: 500,
 	destroyWallProb: 0.33,
-	killZoidCloverProb: 0.5
+	killZoidCloverProb: 0.5,
+	shieldPointProb = 0.1,
+	clockSpeed = 30
 }
 
 module.exports = {

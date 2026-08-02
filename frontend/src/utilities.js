@@ -30,9 +30,25 @@ async function wait(ms) {
 	})
 }
 
+// Converts ms to hh:mm:ss
+function readableTime(ms) {
+  const seconds = Math.floor((ms / 1000) % 60);
+  const minutes = Math.floor((ms / 1000 / 60) % 60);
+  const hours = Math.floor((ms  / 1000 / 3600 ) % 24)
+
+  const readable = [
+    pad(hours.toString(), 2),
+    pad(minutes.toString(), 2),
+    pad(seconds.toString(), 2),
+  ].join(':');
+
+  return readable;
+}
+
 module.exports = {
 	randInt: randInt,
 	randElem: randElem,
 	wait: wait,
-	shuffle: shuffle
+	shuffle: shuffle,
+	readableTime: readableTime
 }

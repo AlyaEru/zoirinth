@@ -80,8 +80,8 @@ app.get('/api/getScores', (req, res) => {
 
 // POST /api/addScore - add new highscore
 app.post('/api/addScore', (req, res) => {
-  const {username, score, level, date} = req.body;
-  if (!username || !score || !level || !date) {
+  const {username, score, level, time, date} = req.body;
+  if (!username || !score || !level || !time || !date) {
     res.status(400).send('All fields required');
     return;
   }
