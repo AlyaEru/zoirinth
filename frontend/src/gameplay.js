@@ -4,20 +4,15 @@ const renderMenu = require('./renderMenu')
 const highscores = require('./highscores')
 const playerSystem = require('./player')
 const util = require('./utilities')
-const shieldPointProb = require('./gameConstants').constants.shieldPointProb
-const clockSpeed = require('./gameConstants').constants.clockSpeed
 
-const gameStats = {
-	level: 0,
-	score: 10,
-	time: 0
-}
+const shieldPointProb = 0.1
 
 async function manageGame(width, height) {
+	const gameStats = {
+		level: 0,
+		score: 10
+	}
 	let died = false
-	gameStats.level = 0
-	gameStats.score = 10
-	gameStats.time = 0
 
 	$(document)
 		.off('keydown')
@@ -67,6 +62,8 @@ function entityIterator(entity) {
 }
 
 async function levelLoop(map, player, level) {
+	const clockSpeed = 30
+
 	let nextZoid = entityIterator(map.entities.zoids)
 	let nextZoidrone = entityIterator(map.entities.zoidrones)
 	while (!player.escaped && !player.dead) {
@@ -95,10 +92,7 @@ async function levelLoop(map, player, level) {
 
 			renderMap.render(map.simulateReal())
 			renderMenu.renderScore(player.score)
-			//renderMenu.renderTime(gameStats.time) tbd
 			renderMenu.renderLevel(level)
-
-			gameStats.time += clockSpeed
 		}
 		
 		renderMenu.renderPlayerInfo(player)
