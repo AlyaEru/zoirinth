@@ -90,14 +90,16 @@ function highscoresNameInput(event, gameStats) {
 	if (
 		(event.code >= 'KeyA' && event.code <= 'KeyZ') ||
 		(event.code >= 'Digit0' && event.code <= 'Digit9') ||
-		(event.code === 'space')
+		(event.code === 'Space')
 	) {
 		// Check for char limit
 		if (_username.length >= 20) {
 			// Play sound? Do nothing
 		}
 		// Check if shift is held down for capital letters
-		else if (event.shiftKey) {
+		else if (event.code === 'Space') {
+			_username += " "
+		} else if (event.shiftKey) {
 			// For letters, we need to get the uppercase version
 			if (event.code >= 'KeyA' && event.code <= 'KeyZ') {
 				_username += event.key.toUpperCase()
