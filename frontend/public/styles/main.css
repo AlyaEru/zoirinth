@@ -78,12 +78,13 @@ div#main {
 	color:#eee;
 }
 
-
-li.menu-item:hover{
-
+li.menu-item {
 	cursor:pointer;
+}
+li.menu-item:hover{
 	text-decoration:underline;
 }
+
 
 li.off:after{
 	color:#ff602a;
@@ -174,7 +175,7 @@ table#gameboard tr{
 	border-spacing:0;
 	border:none;
 	padding:0;
-	line-height:20px;
+	line-height:19.8px;
 }
 table#gameboard tr td, span.hovertext {
 	font-weight:normal;
@@ -182,7 +183,7 @@ table#gameboard tr td, span.hovertext {
 	border-spacing:0;
 	padding:0;
 	display:inline-block;
-	width: 10px;
+	width: 9.9px;
 	position:relative;
 }
 table#gameboard tr td::before, span.hovertext::before {
@@ -220,30 +221,30 @@ table#gameboard tr td:hover::before, span.hovertext:hover::before {display:inlin
 
 .space::after {color:black;content: " ";} /*.space::before {content: "Nothing"}*/
 
-.udlr_weak::after {color:2f9aa4	;content: "╬";}
-.udl_weak::after {color:2f9aa4;content: "╣";}
-.udr_weak::after {color:2f9aa4;content: "╠";}
-.ulr_weak::after {color:2f9aa4;content: "╩";}
-.dlr_weak::after {color:2f9aa4;content: "╦";}
-.ud_weak::after, .u_weak::after, .d_weak::after {color:2f9aa4;content: "║";}
-.lr_weak::after, .l_weak::after, .r_weak::after {color:2f9aa4;content: "═";}
-.ur_weak::after {color:2f9aa4;content: "╚";}
-.dl_weak::after {color:2f9aa4;content: "╗";}
-.ul_weak::after {color:2f9aa4;content: "╝";}
-.dr_weak::after {color:2f9aa4;content: "╔";}
+.udlr_weak::after {color:#2f9aa4	;content: "╬";}
+.udl_weak::after {color:#2f9aa4;content: "╣";}
+.udr_weak::after {color:#2f9aa4;content: "╠";}
+.ulr_weak::after {color:#2f9aa4;content: "╩";}
+.dlr_weak::after {color:#2f9aa4;content: "╦";}
+.ud_weak::after, .u_weak::after, .d_weak::after {color:#2f9aa4;content: "║";}
+.lr_weak::after, .l_weak::after, .r_weak::after {color:#2f9aa4;content: "═";}
+.ur_weak::after {color:#2f9aa4;content: "╚";}
+.dl_weak::after {color:#2f9aa4;content: "╗";}
+.ul_weak::after {color:#2f9aa4;content: "╝";}
+.dr_weak::after {color:#2f9aa4;content: "╔";}
 /*.udlr_weak::before, .udl_weak::before, .udr_weak::before, .ulr_weak::before, .dlr_weak::before, .ud_weak::before, .u_weak::before, .d_weak::before, .lr_weak::before, .l_weak::before, .r_weak::before, .ur_weak::before, .dl_weak::before, .ul_weak::before, .dr_weak::before {content: "A resiliant wall"}*/
 
-.udlr::after {color:45d0dd;content: "╬";font-weight:400;}
-.udl::after {color:45d0dd;content: "╣";font-weight:400;}
-.udr::after {color:45d0dd;content: "╠";font-weight:400;}
-.ulr::after {color:45d0dd;content: "╩";font-weight:400;}
-.dlr::after {color:45d0dd;content: "╦";font-weight:400;}
-.ud::after, .u::after, .d::after {color:45d0dd;content: "║";font-weight:400;}
-.lr::after, .l::after, .r::after {color:45d0dd;content: "═";font-weight:400;}
-.ur::after {color:45d0dd;content: "╚";font-weight:400;}
-.dl::after {color:45d0dd;content: "╗";font-weight:400;}
-.ul::after {color:45d0dd;content: "╝";font-weight:400;}
-.dr::after {color:45d0dd;content: "╔";font-weight:400;}
+.udlr::after {color:#45d0dd;content: "╬";font-weight:400;}
+.udl::after {color:#45d0dd;content: "╣";font-weight:400;}
+.udr::after {color:#45d0dd;content: "╠";font-weight:400;}
+.ulr::after {color:#45d0dd;content: "╩";font-weight:400;}
+.dlr::after {color:#45d0dd;content: "╦";font-weight:400;}
+.ud::after, .u::after, .d::after {color:#45d0dd;content: "║";font-weight:400;}
+.lr::after, .l::after, .r::after {color:#45d0dd;content: "═";font-weight:400;}
+.ur::after {color:#45d0dd;content: "╚";font-weight:400;}
+.dl::after {color:#45d0dd;content: "╗";font-weight:400;}
+.ul::after {color:#45d0dd;content: "╝";font-weight:400;}
+.dr::after {color:#45d0dd;content: "╔";font-weight:400;}
 /*.udlr::before, .udl::before, .udr::before, .ulr::before, .dlr::before, .ud::before, .u::before, .d::before, .lr::before, .l::before, .r::before, .ur::before, .dl::before, .ul::before, .dr::before {content: "An impervious wall"}*/
 
 .ud_portal::after {color:yellow;content: "│";} .ud_portal::before {content: "The portal"}
