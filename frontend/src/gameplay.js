@@ -12,13 +12,17 @@ const gameStats = {
 	score: 10,
 	time: 0
 }
+let startTime = 0
 
 async function manageGame(width, height) {
 	let died = false
+
+	// these are used for highscores
 	gameStats.level = 0
 	gameStats.score = 10
 	gameStats.time = 0
 
+	// set up global keyboard listeners
 	$(document)
 		.off('keydown')
 		.on('keydown', event => {
@@ -33,14 +37,20 @@ async function manageGame(width, height) {
 			}
 		})
 
+	// first game menu before game start
 	renderMenu.renderModalWelcome()
 
+	// primary game loop
 	while (!died) {
 		gameStats.level++
 		renderMenu.renderLevel(gameStats.level)
 		died = await manageLevel(width, height, gameStats)
 	}
 
+	// calculate final run time
+	gameStats.time += Date.now() - startTime
+
+	// small delay to let the death sink in
 	await util.wait(1000)
 	renderMenu.renderModalGameover()
 }
@@ -71,6 +81,11 @@ async function levelLoop(map, player, level) {
 	let nextZoidrone = entityIterator(map.entities.zoidrones)
 	while (!player.escaped && !player.dead) {
 		if (!player.menu && !player.awaitBegin && !$('#modal').hasClass('show')) {
+			// time has to be handled using starts/ends to avoid losing time to calculations
+			if (startTime = 0) {
+				startTime = Date.now()
+			}
+
 			await player.actionQueue.doAction()
 			let zoid = nextZoid()
 			if (zoid) {
@@ -98,7 +113,10 @@ async function levelLoop(map, player, level) {
 			//renderMenu.renderTime(gameStats.time) tbd
 			renderMenu.renderLevel(level)
 
-			gameStats.time += clockSpeed
+		} else if (startTime > 0) {
+			// update run clock
+			gameStats.time += Date.now() - startTime
+			startTime = 0 // prime for reset
 		}
 		
 		renderMenu.renderPlayerInfo(player)
