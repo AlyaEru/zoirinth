@@ -128,6 +128,7 @@ function highscoresNameInput(event, gameStats) {
 		if (_username.trim() !== '') {
 			// Submit score
 			addScore(_username, gameStats)
+			_username = ""
 			return true
 		}
 	}
