@@ -21,6 +21,7 @@ async function manageGame(width, height) {
 	gameStats.level = 0
 	gameStats.score = 10
 	gameStats.time = 0
+	startTime = 0
 
 	// set up global keyboard listeners
 	$(document)
@@ -80,9 +81,9 @@ async function levelLoop(map, player, level) {
 	let nextZoid = entityIterator(map.entities.zoids)
 	let nextZoidrone = entityIterator(map.entities.zoidrones)
 	while (!player.escaped && !player.dead) {
-		if (!player.menu && !player.awaitBegin && !$('#modal').hasClass('show')) {
+		if (!player.menu && !player.awaitBegin) {
 			// time has to be handled using starts/ends to avoid losing time to calculations
-			if (startTime = 0) {
+			if (startTime == 0) {
 				startTime = Date.now()
 			}
 
@@ -116,6 +117,7 @@ async function levelLoop(map, player, level) {
 		} else if (startTime > 0) {
 			// update run clock
 			gameStats.time += Date.now() - startTime
+			console.log(gameStats.time)
 			startTime = 0 // prime for reset
 		}
 		
