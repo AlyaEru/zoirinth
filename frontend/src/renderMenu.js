@@ -1,9 +1,34 @@
 const getScores = require('./highscores').getScores
 
+const keyMap = new Map([
+	['Up', 'KeyW'], 
+	['Down', 'KeyS'], 
+	['Left', 'KeyA'], 
+	['Right', 'KeyD']
+])
+
+// Add click/touch handlers to menu items
+$(document).delegate('li.menu-item','click touchstart', function() {
+	
+	const menuItem = $(this);
+	const key = menuItem.attr('data-hotkey');
+	var e = jQuery.Event("keydown")
+	if (keyMap.has(key)) {
+		e.code = keyMap.get(key)
+	} else if (key.length == 1) {
+		e.code = "Key" + key
+	} else {
+		e.code = key
+	}
+	$(document).trigger(e)
+
+});
+
+
 function renderPlayerInfo(player) {
 	// Initialize menu items if they don't exist
 	let content = ""
-	if (($('#left-menu').length <= 1) || (player.menu != $('#left-menu').hasClass('extended'))) {
+	if ((($('#left-menu li').length == 0)) || (player.menu != $('#left-menu').hasClass('extended'))) {
 		content = `
 			<li data-hotkey="R" id="runmode" class="menu-item on">Run Mode</li>
 			<li data-hotkey="Q" id="shield" class="menu-item off">Shield</li>
@@ -54,9 +79,9 @@ function renderModalWelcome() {
 		<li>|&nbsp;&nbsp;&nbsp;__| . | |&nbsp;&nbsp;_| |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;_|&nbsp;&nbsp;&nbsp;|</li>
 		<li>|_____|___|_|_| |_|_|_|_| |_|_|</li>
 		<li>&nbsp; </li>
-		<li class='menu-item'>Play &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="white-text">Enter</span></li>
-		<li class='menu-item'>How to play &nbsp;&nbsp;&nbsp;<span class="white-text">H</span></li>
-		<li class='menu-item'>Highscores &nbsp;&nbsp;&nbsp;&nbsp;<span class="white-text">S</span></li>
+		<li class='menu-item' data-hotkey='Enter'>Play &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="white-text">Enter</span></li>
+		<!--li class='menu-item' data-hotkey='H'>How to play &nbsp;&nbsp;&nbsp;<span class="white-text">H</span></li-->
+		<li class='menu-item' data-hotkey='S'>Highscores &nbsp;&nbsp;&nbsp;&nbsp;<span class="white-text">S</span></li>
 		<li>&nbsp; </li>`
 
 	$('#modal ul').html(content)
@@ -93,7 +118,7 @@ function renderModalHighscores() {
             </tbody>
         </table></li>
         <li>&nbsp; </li>
-        <li class='menu-item'>press Enter to return</li>
+        <li class='menu-item' data-hotkey='Enter'>press Enter to return</li>
         <li>&nbsp; </li>
     `
 
@@ -113,7 +138,7 @@ function renderModalGameover() {
 		<li>|___|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
 		<li>&nbsp; </li>
 		<li>Name: <span id="namefield" class="white-text"></span><span class="cursorblink">_</span></li>
-		<li class='menu-item'>press Enter to submit</li>
+		<li class='menu-item' data-hotkey='Enter'>press Enter to submit</li>
 		<li>&nbsp; </li>`
 
 	$('#modal ul').html(content)

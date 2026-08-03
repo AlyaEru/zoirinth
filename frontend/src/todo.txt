@@ -1,9 +1,6 @@
 make sure shield mode can't turn on at 0 points
-add additional quick menu items during pause for shooting "Unpause and shoot" "Arrow"
-Pause/unpause toggle text based on game state
-touchscreen mode arrows and clickable list items and ability to swap menu for left/right handedness 
+touchscreen mode on screen arrowkeys and ability to swap menu for left/right handedness 
 track game play time and add to highscores data
-
 
 add randomness
 - random wait before portal spawn

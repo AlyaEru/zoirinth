@@ -80,6 +80,7 @@ div#main {
 
 li.menu-item {
 	cursor:pointer;
+	
 }
 li.menu-item:hover{
 	text-decoration:underline;
