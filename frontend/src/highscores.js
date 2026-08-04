@@ -87,9 +87,8 @@ function getScores() {
 function highscoresNameInput(event, gameStats) {
 	const nameField = $('#namefield')
 	const mobileNameField = $('#mobilenamefield')
-	if (!nameField) {
-		return
-	}
+	
+	if (!nameField || !mobileNameField) {return}
 
 	// Handle alphanumeric characters (with shift for capital letters)
 	if (

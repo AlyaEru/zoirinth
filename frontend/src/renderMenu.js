@@ -1,3 +1,4 @@
+const util = require('./utilities')
 const getScores = require('./highscores').getScores
 
 const keyMap = new Map([
@@ -26,12 +27,13 @@ $(document).delegate('li.menu-item','click', function(event) {
 });
 
 
-function renderPlayerInfo(player) {
+function renderPlayerInfo(player, time) {
 	// Initialize menu items if they don't exist
 	let content = ""
 	if ((($('#menu li').length == 0)) || (player.menu != $('#menu').hasClass('extended'))) {
 		content = `
-			<ul id="left-menu">
+		<ul><li id="time">${util.readableTime(time)}</li></ul>	
+		<ul id="left-menu">
 				<li data-hotkey="R" id="runmode" class="menu-item on">Run Mode</li>
 				<li data-hotkey="Q" id="shield" class="menu-item off">Shield</li>
 				<li data-hotkey="I" id="invisibility" class="menu-item off">Invisibility</li>
@@ -66,6 +68,9 @@ function renderPlayerInfo(player) {
 			`
 		}
 		$('#menu').html(content);
+	} else {
+		// update clock only
+		$('#time').html(`${util.readableTime(time)}`)
 	}
 	
 	if (player.runMode != $('#runmode').hasClass('on'))
@@ -101,7 +106,11 @@ function renderModalWelcome() {
 }
 
 function renderModalHowto() {
-	let content = `<li>How To:</li><li>...not implemented...</li>`
+	let content = `
+		<li>How To:</li>
+		<li>...not implemented yet...</li>
+		<li>But honestly - if you know, you know.</li>
+		`
 	$('#modal ul').html(content)
 
 	$('#modal').removeClass('welcome')

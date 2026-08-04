@@ -6,7 +6,14 @@
     src: url("clacon.ttf");
 }
 
-body{background-color:black;font:26px gameFont;color:#ff860d;margin:0;padding:0;}
+body {
+	background-color:black;
+	font-family: gameFont;
+	font-size: 20pt;
+	user-select: none;
+	color:#ff860d;
+	margin:0;padding:0;
+}
 .white-text{color:#fff;}
 .red-text{color:#ff602a;}
 
@@ -24,8 +31,8 @@ main{
 }
 main > div {
 	display: flex;
-	gap: 1em;
 	height: min-content;
+	max-height: 100vh;
 	flex-wrap: wrap;
 	justify-content: center;
 }
@@ -35,8 +42,8 @@ main > div {
 	position:relative;
 	display:block;
 	padding:0;
-	margin:1em 0;
-	vertical-align:top;
+	margin:.25em .5em;
+	/* vertical-align: top; */
 }
 #main {
 	/* min-width: 370px; */
@@ -44,8 +51,8 @@ main > div {
 	position:relative;
 	display:inline-block;
 	padding:0;
-	margin-top:1em;
-	vertical-align:top;
+	/* margin-top:1em; */
+	/* vertical-align:top; */
 }
 
 
@@ -58,31 +65,28 @@ main > div {
 /* menus */
 
 
-#menu ul, #top-menu{
+#top-menu{
+	display: flex;
+	justify-content: space-between;
+	padding: .25em .25em 0 .25em;
+	margin: 0;
+	list-style-type:none;
+	text-align:left;
+}
+#top-menu li {
+	display: block;
+}
+
+#menu ul {
 	list-style-type:none;
 	text-align:left;
 	padding:0;
-}
-#menu ul {
 	margin: 0;
-	padding-right: 2.5em;
 	position: relative;
 }
-#points {
-	display: block;
-	position:absolute;
-	margin-right:10px;
-	right:0;
-	top:0;
+#menu li.menu-item {
+	padding-right: 2.5em;
 }
-#level {
-	display: block;
-	position:absolute;
-	margin-left:10px;
-	left:0;
-	top:0;
-}
-
 #menu li.menu-item:before{
 	content:attr(data-hotkey);
 	position:absolute;
@@ -92,7 +96,6 @@ main > div {
 
 li.menu-item {
 	cursor:pointer;
-
 }
 li.menu-item:hover{
 	text-decoration:underline;
@@ -115,7 +118,10 @@ span.cursorblink {
 	color: #eee;
 	animation: cursor .75s step-start infinite;
 }
-
+li#time {
+	text-align: right;
+	padding:0;
+}
 
 
 
@@ -445,10 +451,26 @@ table#gameboard tr td:hover::before, span.hovertext:hover::before {display:inlin
 		position: relative;
 		top: 3.125em;
 	}
+
+	li#time {
+		position: absolute;
+		text-align: center;
+		width: 100%;
+	}
+	ul:has(#time) {
+		position: absolute;
+		bottom: 0;
+		width: calc(100% - 1em);
+	}
 }
 
 
 
 /* Font size adjustments for small mobile screens */
-@media (min-width: 430px), (min-height: 430px) {body {font-size: 22pt;}}
-@media (min-width: 380px), (min-height: 380px) {body {font-size: 18pt;}}
+@media (max-width: 430px),(max-height: 430px) {
+	body {font-size: 16pt;} 
+	#menu {margin: 0;}
+}
+@media (max-width: 380px), (max-height: 380px) {
+	body {font-size: 5vw;}
+}

@@ -120,7 +120,9 @@ async function levelLoop(map, player, level) {
 			startTime = 0 // prime for reset
 		}
 		
-		renderMenu.renderPlayerInfo(player)
+		let currentMoment = gameStats.time
+		if(startTime>0) {currentMoment += (Date.now() - startTime)}
+		renderMenu.renderPlayerInfo(player, currentMoment)
 		await util.wait(clockSpeed)
 	}
 }
