@@ -180,7 +180,7 @@ table#highscores {
 	border-spacing:0;
 	padding:0;
 	margin:auto;
-	font:1em gameFont;
+	font-size:1em;
 }
 table#highscores th {
 	padding: .5em;
@@ -462,6 +462,10 @@ table#gameboard tr td:hover::before, span.hovertext:hover::before {display:inlin
 		bottom: 0;
 		width: calc(100% - 1em);
 	}
+
+	#modals div {
+		align-items: flex-start;
+	}
 }
 
 
@@ -470,6 +474,32 @@ table#gameboard tr td:hover::before, span.hovertext:hover::before {display:inlin
 @media (max-width: 430px),(max-height: 430px) {
 	body {font-size: 16pt;} 
 	#menu {margin: 0;}
+	table#highscores {font-size: .75em;}
+
+	#menu ul li {
+		padding: .5em;
+	}
+	#menu ul li.menu-item.left {
+		width: calc(50% - 1.375em);
+		height: 2.9em;
+		transform: translateY(calc(50% - .1em));
+		padding: .5em;
+	}
+	#menu ul li.menu-item.right {
+		width: calc(50% - 1.375em);
+		height: 2.9em;
+		transform: translateY(calc(50% - .1em));
+		padding: .5em;
+	}
+	#menu ul li.menu-item.up {
+		padding: .5em;
+	}
+	#menu ul li.menu-item.down {
+		top: 4.125em;
+		padding: .5em;
+	}
+
+
 }
 @media (max-width: 380px), (max-height: 380px) {
 	body {font-size: 5vw;}
