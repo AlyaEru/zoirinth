@@ -86,6 +86,7 @@ function getScores() {
 
 function highscoresNameInput(event, gameStats) {
 	const nameField = $('#namefield')
+	const mobileNameField = $('#mobilenamefield')
 	if (!nameField) {
 		return
 	}
@@ -125,6 +126,11 @@ function highscoresNameInput(event, gameStats) {
 	}
 	// Handle enter key to submit
 	else if (event.code === 'Enter') {
+		// we need a separate input field for mobile devices otherwise it would be impossible to enter
+		if (mobileNameField.val().trim() !== '') {
+			_username = mobileNameField.val()
+		}
+
 		if (_username.trim() !== '') {
 			// Submit score
 			addScore(_username, gameStats)

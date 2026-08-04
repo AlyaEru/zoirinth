@@ -22,19 +22,30 @@ main{
 	align-items: center;
 	justify-content: center;
 }
+main > div {
+	display: flex;
+	gap: 1em;
+	height: min-content;
+	flex-wrap: wrap;
+	justify-content: center;
+}
 
-
-div#main, div#menu{
+#menu{
 	width:auto;
-	/*border-left:3px double #ff860d;*/
+	position:relative;
+	display:block;
+	padding:0;
+	margin:1em 0;
+	vertical-align:top;
+}
+#main {
+	/* min-width: 370px; */
+	width:auto;
 	position:relative;
 	display:inline-block;
 	padding:0;
-	margin:1em;
+	margin-top:1em;
 	vertical-align:top;
-}
-div#main {
-	min-width: 370px;
 }
 
 
@@ -47,7 +58,7 @@ div#main {
 /* menus */
 
 
-#left-menu, #top-menu{
+#menu ul, #top-menu{
 	list-style-type:none;
 	text-align:left;
 	padding:0;
@@ -55,6 +66,7 @@ div#main {
 #menu ul {
 	margin: 0;
 	padding-right: 2.5em;
+	position: relative;
 }
 #points {
 	display: block;
@@ -71,7 +83,7 @@ div#main {
 	top:0;
 }
 
-#left-menu li.menu-item:before{
+#menu li.menu-item:before{
 	content:attr(data-hotkey);
 	position:absolute;
 	right:0;
@@ -80,7 +92,7 @@ div#main {
 
 li.menu-item {
 	cursor:pointer;
-	
+
 }
 li.menu-item:hover{
 	text-decoration:underline;
@@ -141,6 +153,17 @@ span.cursorblink {
 	display:flex;
 }
 
+input {
+	font: 1em gameFont;
+	color: #fff;
+	background-color: transparent;
+	border: 1px solid #ff860d;
+	outline: none;
+	margin: .25em;
+	padding: .5em;
+	width: calc(100% - .5em);
+	box-sizing: border-box;
+}
 
 /* highscores */
 
@@ -151,7 +174,7 @@ table#highscores {
 	border-spacing:0;
 	padding:0;
 	margin:auto;
-	font:26px gameFont;
+	font:1em gameFont;
 }
 table#highscores th {
 	padding: .5em;
@@ -160,6 +183,7 @@ table#highscores th {
 table#highscores td {
 	padding: .5em;
 	border-top: 1px solid #ff860d;
+	text-align: left;
 }
 
 
@@ -170,13 +194,13 @@ table#gameboard {
 	border-spacing:0;
 	padding:0;
 	margin:auto;
-	font:26px gameFont;
+	font:1em gameFont;
 }
 table#gameboard tr{
 	border-spacing:0;
 	border:none;
 	padding:0;
-	line-height:19.8px;
+	line-height:.74em;/*19.8px;*/
 }
 table#gameboard tr td, span.hovertext {
 	font-weight:normal;
@@ -184,7 +208,7 @@ table#gameboard tr td, span.hovertext {
 	border-spacing:0;
 	padding:0;
 	display:inline-block;
-	width: 9.9px;
+	width: .38em;/*9.9px;*/
 	position:relative;
 }
 table#gameboard tr td::before, span.hovertext::before {
@@ -334,3 +358,97 @@ table#gameboard tr td:hover::before, span.hovertext:hover::before {display:inlin
     right:15em;
   }
 }
+
+
+
+
+
+
+
+#mobilenamefield {
+	display: none;
+}
+.mobile-button {
+	display: none;
+}
+
+@media (hover: none) {
+	main {
+		align-items: flex-start;
+	}
+	#menu {
+		/* max-height: calc(100vh - 530px); */
+		width: calc(100vw - 1em);
+		display: flex;
+	}
+	#menu ul {
+		padding-right: 0;
+		width: 50%;
+	}
+	li.on::after, li.off::after {
+		right: .35em;
+	}
+	#menu ul li::before {
+		display: none;
+	}
+	#menu ul li {
+		padding: .25em;
+		padding-right: 1.5em;
+		margin: .25em;
+	}
+	
+	
+	#namefield, .cursorblink {
+		display: none;
+	}
+	#mobilenamefield {
+		display: block;
+	}
+	.menu-item {
+		padding: .25em;
+		margin: .25em;
+		outline: 1px solid #ff860d;
+	}
+
+	.mobile-button {
+		display: block;
+	}
+	/*special placement for arrow buttons*/
+	#menu ul li.menu-item.left {
+		width: calc(50% - .875em);
+		height: 2.4em;
+		padding-right: .25em;
+		position: absolute;
+		text-align: center;
+		transform: translateY(calc(50% - .175em));
+		display: flex;
+		align-items: center;
+	}
+	#menu ul li.menu-item.right {
+		width: calc(50% - .875em);
+		height: 2.4em;
+		padding-right: .25em;
+		position: absolute;
+		right: 0;
+		transform: translateY(calc(50% - .175em));
+		text-align: center;
+		display: flex;
+		align-items: center;
+	}
+	#menu ul li.menu-item.up {
+		padding-right: .25em;
+		text-align: center;
+	}
+	#menu ul li.menu-item.down {
+		padding-right: .25em;
+		text-align: center;
+		position: relative;
+		top: 3.125em;
+	}
+}
+
+
+
+/* Font size adjustments for small mobile screens */
+@media (min-width: 430px), (min-height: 430px) {body {font-size: 22pt;}}
+@media (min-width: 380px), (min-height: 380px) {body {font-size: 18pt;}}

@@ -117,7 +117,6 @@ async function levelLoop(map, player, level) {
 		} else if (startTime > 0) {
 			// update run clock
 			gameStats.time += Date.now() - startTime
-			console.log(gameStats.time)
 			startTime = 0 // prime for reset
 		}
 		

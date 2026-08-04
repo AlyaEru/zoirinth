@@ -8,8 +8,9 @@ const keyMap = new Map([
 ])
 
 // Add click/touch handlers to menu items
-$(document).delegate('li.menu-item','click touchstart', function() {
-	
+$(document).delegate('li.menu-item','click', function(event) {
+	event.preventDefault()
+
 	const menuItem = $(this);
 	const key = menuItem.attr('data-hotkey');
 	var e = jQuery.Event("keydown")
@@ -28,33 +29,43 @@ $(document).delegate('li.menu-item','click touchstart', function() {
 function renderPlayerInfo(player) {
 	// Initialize menu items if they don't exist
 	let content = ""
-	if ((($('#left-menu li').length == 0)) || (player.menu != $('#left-menu').hasClass('extended'))) {
+	if ((($('#menu li').length == 0)) || (player.menu != $('#menu').hasClass('extended'))) {
 		content = `
-			<li data-hotkey="R" id="runmode" class="menu-item on">Run Mode</li>
-			<li data-hotkey="Q" id="shield" class="menu-item off">Shield</li>
-			<li data-hotkey="I" id="invisibility" class="menu-item off">Invisibility</li>
-			<li data-hotkey="H"  class="menu-item">Hyperspace</li>
-			<li data-hotkey="T"  class="menu-item">Superblast</li>
-			<li data-hotkey="Space"  class="menu-item">Fire at zoid</li>
-			<li>&nbsp; </li>
+			<ul id="left-menu">
+				<li data-hotkey="R" id="runmode" class="menu-item on">Run Mode</li>
+				<li data-hotkey="Q" id="shield" class="menu-item off">Shield</li>
+				<li data-hotkey="I" id="invisibility" class="menu-item off">Invisibility</li>
+				<li data-hotkey="H"  class="menu-item">Hyperspace</li>
+				<li data-hotkey="T"  class="menu-item">Superblast</li>
+				<li data-hotkey="Space"  class="menu-item">Fire at zoid</li>
+			</ul>
 		`;
 		if (player.menu) {
-			$('#left-menu').addClass('extended')
+			$('#menu').addClass('extended')
 			content += `
-				<li data-hotkey="Left" class="menu-item">Shoot Left</li>
-				<li data-hotkey="Right" class="menu-item">Shoot Right</li>
-				<li data-hotkey="Up" class="menu-item">Shoot Up</li>
-				<li data-hotkey="Down" class="menu-item">Shoot Down</li>
-				<li>&nbsp; </li>
-				<li data-hotkey="Enter" class="menu-item">Unpause</li>
+				<ul id="right-menu">
+					<li data-hotkey="Enter" class="menu-item">Unpause</li>
+					<li>&nbsp; </li>
+					<li data-hotkey="Left" class="menu-item left">Shoot Left</li>
+					<li data-hotkey="Right" class="menu-item right">Shoot Right</li>
+					<li data-hotkey="Up" class="menu-item up">Shoot Up</li>
+					<li data-hotkey="Down" class="menu-item down">Shoot Down</li>
+				</ul>
 			`
 		} else {
-			$('#left-menu').removeClass('extended')
+			$('#menu').removeClass('extended')
 			content += `
-				<li data-hotkey="Enter" class="menu-item">Pause</li>
+				<ul id="right-menu">	
+					<li data-hotkey="Enter" class="menu-item">Pause</li>
+					<li>&nbsp; </li>
+					<li data-hotkey="Left" class="menu-item left mobile-button">Move Left</li>
+					<li data-hotkey="Right" class="menu-item right mobile-button">Move Right</li>
+					<li data-hotkey="Up" class="menu-item up mobile-button">Move Up</li>
+					<li data-hotkey="Down" class="menu-item down mobile-button">Move Down</li>
+				</ul>
 			`
 		}
-		$('#left-menu').html(content);
+		$('#menu').html(content);
 	}
 	
 	if (player.runMode != $('#runmode').hasClass('on'))
@@ -137,7 +148,7 @@ function renderModalGameover() {
 		<li>|_&nbsp;&nbsp;|__,|_|_|_|___|&nbsp;&nbsp;|___|__/|___|_|&nbsp;&nbsp;</li>
 		<li>|___|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
 		<li>&nbsp; </li>
-		<li>Name: <span id="namefield" class="white-text"></span><span class="cursorblink">_</span></li>
+		<li>Name: <input id="mobilenamefield" maxlength="20" pattern="([A-Za-z0-9 ]*)" placeholder="enter your name"><span id="namefield" class="white-text"></span><span class="cursorblink">_</span></li>
 		<li class='menu-item' data-hotkey='Enter'>press Enter to submit</li>
 		<li>&nbsp; </li>`
 

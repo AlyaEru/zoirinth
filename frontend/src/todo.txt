@@ -1,6 +1,6 @@
 make sure shield mode can't turn on at 0 points
-touchscreen mode on screen arrowkeys and ability to swap menu for left/right handedness 
-track game play time and add to highscores data
+highscore table display on mobile
+make sure all menus render correctly at game start.
 
 add randomness
 - random wait before portal spawn
