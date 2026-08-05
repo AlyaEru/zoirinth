@@ -57,10 +57,9 @@ function getScores() {
 
 			// Add header row
 			const headerRow = $('<tr>')
-			headerRow.append('<th>Rank</th>')
-			headerRow.append('<th>Name</th>')
-			headerRow.append('<th>Score</th>')
+			headerRow.append('<th></th>')
 			headerRow.append('<th>Level</th>')
+			headerRow.append('<th>Score</th>')
 			headerRow.append('<th>Time</th>')
 			headerRow.append('<th>Date</th>')
 			table.append(headerRow)
@@ -68,10 +67,9 @@ function getScores() {
 			// Add score rows
 			topScores.forEach((score, index) => {
 				const row = $('<tr>')
-				row.append(`<td>${index + 1}</td>`)
 				row.append(`<td>${score.username}</td>`)
-				row.append(`<td>${score.score}</td>`)
 				row.append(`<td>${score.level}</td>`)
+				row.append(`<td>${score.score}</td>`)
 				row.append(`<td>${util.readableTime(score.time)}</td>`)
 				row.append(`<td>${new Date(score.date).toLocaleDateString()}</td>`)
 				table.append(row)
@@ -136,6 +134,10 @@ function highscoresNameInput(event, gameStats) {
 			_username = ""
 			return true
 		}
+	}
+	else if (event.code === 'Escape') {
+		_username = ""
+		return true
 	}
 	return false
 }

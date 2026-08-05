@@ -123,16 +123,6 @@ function renderModalHighscores() {
         <li>Highscores</li>
         <li>&nbsp; </li>
         <li><table id="highscores" class="highscore-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Score</th>
-                    <th>Level</th>
-                    <th>Time</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
             <tbody>
                 <tr><td colspan="6">Loading...</td></tr>
             </tbody>
